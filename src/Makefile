@@ -1,8 +1,8 @@
 # Makefile para compilar un proyecto con SFML usando MinGW
 
 CXX = g++
-CXXFLAGS = -IE:/Nicolax/Spacio/SFML/include
-LDFLAGS = -LE:/Nicolax/Spacio/SFML/lib -lsfml-graphics -lsfml-window -lsfml-system
+CXXFLAGS = -IE:/Nicolax/Spacio/SpaceInvaders/SFML/include
+LDFLAGS = -LE:/Nicolax/Space_Invaders/SpaceInvaders/SFML/lib -lsfml-graphics -lsfml-window -lsfml-system
 SRC = main.cpp
 OBJ = $(SRC:.cpp=.o)
 TARGET = main.exe
