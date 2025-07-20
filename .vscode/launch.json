@@ -5,6 +5,7 @@
             "name": "Debug",
             "type": "cppdbg",
             "request": "launch",
+            "program": "${workspaceFolder}/output/main", // Default program path
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
@@ -27,5 +28,6 @@
             },
             "preLaunchTask": "build"
         }
+        
     ]
 }

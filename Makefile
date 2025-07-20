@@ -97,3 +97,20 @@ clean:
 run: all
 	./$(OUTPUTMAIN)
 	@echo Executing 'run: all' complete!
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "C:/SFML/include"
+            ],
+            "defines": [],
+            "compilerPath": "C:/mingw-w64/bin/g++.exe",
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "windows-gcc-x64"
+        }
+    ],
+    "version": 4
+}
