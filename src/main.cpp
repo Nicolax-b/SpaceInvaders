@@ -4,6 +4,19 @@
 #include "Jugador.hpp"
 #include "Bala.hpp"
 
+<<<<<<< Updated upstream
+=======
+int main(int argc, char *argv[])
+{
+    std::cout << "Hello world!" << std::endl;
+}
+#include <iostream>
+#include <SFML/Graphics.hpp>
+#include <vector>
+#include "Jugador.hpp"
+#include "Bala.hpp"
+
+>>>>>>> Stashed changes
 using namespace std;
 using namespace sf;
 

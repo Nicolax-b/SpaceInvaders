@@ -3,6 +3,10 @@
 
 using namespace std;
 using namespace sf;
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 class Enemie : public Drawable{
 	private:
 		Sprite sprite;
