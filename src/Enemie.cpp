@@ -1,5 +1,4 @@
 #include "Enemie.hpp"
-
 Enemie::Enemie(int x, int y, Texture &texture, Vector2f p){
 	point = p;
 	sprite.setTexture(texture);
@@ -11,7 +10,6 @@ Enemie::Enemie(int x, int y, Texture &texture, Vector2f p){
 	vel=24;
 	cadencia=150;
 }
-
 void Enemie::Update(){
 	if(timer>=cadencia){
 		sprite.move(vel,0);
@@ -22,20 +20,16 @@ void Enemie::Update(){
 	}
 	timer++;
 }
-
 void Enemie::ChangeDir(){
 	vel*=-1;
 	sprite.move(0,abs(vel));
 }
-
 Vector2f Enemie::Pos(){
 	return sprite.getPosition();
 }
-
 void Enemie::AumentarCadencia(){
 	cadencia--;
 }
-
 void Enemie::draw(RenderTarget &rt, RenderStates rs) const{
 	rt.draw(sprite,rs);
 }

@@ -3,7 +3,6 @@
 
 using namespace std;
 using namespace sf;
-
 class Enemie : public Drawable{
 	private:
 		Sprite sprite;
