@@ -1,5 +1,6 @@
 #include "Jugador.hpp"
 #include <SFML/Audio.hpp>
+#include <iostream>
 
 Player(int x, int y, Texture& texture){
     sprite.setTexture(texture);
@@ -17,6 +18,13 @@ Player(int x, int y, Texture& texture){
     else 
     {
         shootSound.setBuffer(shootBuffer);
+    }
+
+    //  AÑADIDO: cargar sonido de explosión
+    if (!deathBuffer.loadFromFile("sounds/explosionjugador.wav")) {
+        cerr << "Error: No se pudo cargar el sonido de explosión.\n";
+    } else {
+        deathSound.setBuffer(deathBuffer);
     }
 }
 
@@ -42,6 +50,11 @@ bool Player::Shoot(){
 
 Vector2f Player::pos() {
     return sprite.getPosition();
+}
+
+//  AÑADIDO: método para reproducir sonido de muerte
+void Player::die() {
+    deathSound.play();
 }
 
 void draw(RenderTarget &rt, RenderStates rs) const{

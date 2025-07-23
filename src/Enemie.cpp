@@ -1,40 +1,8 @@
 #include "Enemie.hpp"
+#include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
+#include <iostream>
 
-<<<<<<< HEAD
-Enemie::Enemie(int x, int y, Texture &texture, Vector2f p){
-	point = p;
-	sprite.setTexture(texture);
-	sprite.setTextureRect(IntRect(point.x,point.y,8,8));
-	sprite.setPosition(x,y);
-	sprite.setScale(3,3);
-	state=0;
-	timer=0;
-	vel=24;
-}
-
-void Enemie::update() {
-    if (state == 100) {
-       sprite.move(vel,0);
-       state++;
-       state%=2;
-       sprite.setTextureRect(IntRect(point.x+state*9, point.y 8, 8));
-        timer=0;
-    }
-    timer++;
-} 
-void Enemie::ChangeDir() {
-   vel*=-1;
-   sprite.move)0,abs(vel));
-}
-
-vector2f Enemie::Pos(){
-   return sprite.getPosition();
-}
-       
-void Enimer::draw(RenderTarget &rt , RenderStates rs) const {
-    rt.draw(sprite, rs);
-}   
-=======
 Enemie::Enemie(int x, int y, Texture &texture, Vector2f p) {
     point = p;
     sprite.setTexture(texture);
@@ -51,6 +19,13 @@ Enemie::Enemie(int x, int y, Texture &texture, Vector2f p) {
         cerr << "Error: No se pudo cargar el sonido de disparo.\n";
     } else {
         shootSound.setBuffer(shootBuffer);
+    }
+
+    // NUEVO: cargar sonido de explosión
+    if (!explosionBuffer.loadFromFile("sounds/explosionenemy.wav")) {
+        cerr << "Error: No se pudo cargar el sonido de explosión.\n";
+    } else {
+        explosionSound.setBuffer(explosionBuffer);
     }
 }
 
@@ -85,7 +60,10 @@ void Enemie::Disparar() {
     shootSound.play(); 
 }
 
+void Enemie::Morir() {
+    explosionSound.play(); // NUEVO: reproduce sonido de explosión
+}
+
 void Enemie::draw(RenderTarget &rt, RenderStates rs) const {
     rt.draw(sprite, rs);
 }
->>>>>>> c8bf9374d0638fcd7030f05a5e700cbabc2ae5ee

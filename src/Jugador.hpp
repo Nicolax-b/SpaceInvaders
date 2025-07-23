@@ -13,13 +13,19 @@ class Player : public Drawable {
         bool shoot=false;
         SoundBuffer shootBuffer;
         Sound shootSound;
+
+        // AÑADIDO PARA EXPLOSIÓN
+        SoundBuffer deathBuffer;
+        Sound deathSound;
+
     public:
         Player(int x, int y, Texture& texture);
         void update();
         bool Shooy();
-        Vector2f pos()
+        Vector2f pos();
+    
+        // AÑADIDO: método para sonar explosión
+        void die();
+
         virtual void draw(RenderTarget &rt, RenderStates rs) const;
 };
-
-
-            

@@ -3,7 +3,6 @@
 #include "Menu.hpp"
 using namespace sf;
 
-
 Menu::Menu(float width, float height) 
 {
     if (!font.loadFromFile("arial.ttf")) {
@@ -11,7 +10,7 @@ Menu::Menu(float width, float height)
     }
 
     main_menu[0].setFont(font);
-    main_menu[0].setFillColor(Color::Green); // Seleccionado por defecto
+    main_menu[0].setFillColor(Color::Green);
     main_menu[0].setString("Play");
     main_menu[0].setCharacterSize(50);
     main_menu[0].setPosition(Vector2f(width / 2, height / 3));
@@ -62,9 +61,23 @@ void Menu::Enter()
 {
     if (main_menu_selected == 0)
     {
+        // Acción para Play
     }
     else if (main_menu_selected == 1) 
     {
         exit(0);
     }
+}
+
+void Menu::PlayMusic() {
+    if (!menuMusic.openFromFile("sounds/menu_music.ogg")) {
+        std::cerr << "Error al cargar la música del menú.\n";
+    } else {
+        menuMusic.setLoop(true);
+        menuMusic.play();
+    }
+}
+
+void Menu::StopMusic() {
+    menuMusic.stop();
 }
