@@ -1,14 +1,16 @@
 #include "Bala.hpp"
+#include <iostream>  // si necesitas para mensajes, si no, puedes quitar también
 
-Bullet:Bullet(int x, int y, Texture &texture, intrect intRect, int v) {
-    sprite.setTexture(texture);
-    sprite.setTextureRect(IntRect);
-    sprite.posicion(x,y);
-    sprite.setscale(3,3);
-    vel=v;
+Bullet::Bullet(int x, int y, Texture &texture, IntRect intRect, int v)
+    : sprite(texture, intRect)
+{
+    sprite.setPosition(sf::Vector2f(static_cast<float>(x), static_cast<float>(y)));
+    sprite.setScale(sf::Vector2f(3.0f, 3.0f));
+    vel = v;
 }
+
 void Bullet::update() {
-    sprite.move(0, vel);
+    sprite.move(sf::Vector2f(0, vel));
 }
 
 Vector2f Bullet::Pos() {
