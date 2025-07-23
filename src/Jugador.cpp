@@ -1,4 +1,5 @@
 #include "Jugador.hpp"
+#include <SFML/Audio.hpp>
 
 Player(int x, int y, Texture& texture){
     sprite.setTexture(texture);
@@ -7,10 +8,20 @@ Player(int x, int y, Texture& texture){
     sprite.setscale(3,3);
     vida=100;
     vel=5;
+
+    // Cargo el sonido para disparo
+    if (!shootBuffer.loadFromFile("sounds/Bala.wav"))
+    {
+        cerr << "Error: No se pudo cargar el sonido de disparo.\n";
+    } 
+    else 
+    {
+        shootSound.setBuffer(shootBuffer);
+    }
 }
 
 void Player::update() {
-    if(Keyboard::isKeyPressed(Keyboard::right)&&sprite.getPosition().x+vel<552{
+    if(Keyboard::isKeyPressed(Keyboard::right)&&sprite.getPosition().x+vel<552){
         sprite.move(vel, 0);
     }
     if(Keyboard::isKeyPressed(Keyboard::left)&&sprite.getPosition().x+vel*-1>0) {
@@ -20,7 +31,8 @@ void Player::update() {
 
 bool Player::Shoot(){
     if(keyboard::isKeyPressed(Keyboard::space)&& !shoot){
-        shoot=true
+        shoot=true;
+        shootSound.play();  // Aquí reproduzco el sonido al disparar
         return true;
     }else if(keyboard::isKeyPressed(Keyboard::space)){
         shoot=false;
