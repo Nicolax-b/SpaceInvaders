@@ -5,6 +5,7 @@
 using namespace std;
 using namespace sf;
 
+<<<<<<< Updated upstream
 class Player : public Drawable {
     private:
         Sprite sprite;
@@ -29,3 +30,24 @@ class Player : public Drawable {
 
         virtual void draw(RenderTarget &rt, RenderStates rs) const;
 };
+=======
+class Player : public Drawable
+{
+private:
+    Sprite sprite;
+    int vida;
+    int vel;
+    bool shoot = false;
+    SoundBuffer shootBuffer;
+    Sound shootSound;
+
+public:
+    Player(int x, int y, Texture &texture);
+    void update();
+    bool Shoot();
+    void QuitarVida();
+    bool Vivo();
+    Vector2f pos();
+    virtual void draw(RenderTarget &rt, RenderStates rs) const;
+};
+>>>>>>> Stashed changes
