@@ -3,12 +3,8 @@
 #include <SFML/Audio.hpp>
 #include <iostream>
 
-<<<<<<< Updated upstream
-Enemie::Enemie(int x, int y, Texture &texture, Vector2f p) {
-=======
 Enemie::Enemie(int x, int y, Texture &texture, Vector2f p)
 {
->>>>>>> Stashed changes
     point = p;
     sprite.setTexture(texture);
     sprite.setTextureRect(IntRect(point.x, point.y, 8, 8));
@@ -18,23 +14,26 @@ Enemie::Enemie(int x, int y, Texture &texture, Vector2f p)
     timer = 0;
     vel = 24;
     cadencia = 150;
-<<<<<<< Updated upstream
 
     //  CARGA EL ARCHIVO DE AUDIO AQUÍ
-    if (!shootBuffer.loadFromFile("sounds/shootenemy.wav")) {
+    if (!shootBuffer.loadFromFile("sounds/shootenemy.wav"))
+    {
         cerr << "Error: No se pudo cargar el sonido de disparo.\n";
-    } else {
+    }
+    else
+    {
         shootSound.setBuffer(shootBuffer);
     }
 
     // NUEVO: cargar sonido de explosión
-    if (!explosionBuffer.loadFromFile("sounds/explosionenemy.wav")) {
+    if (!explosionBuffer.loadFromFile("sounds/explosionenemy.wav"))
+    {
         cerr << "Error: No se pudo cargar el sonido de explosión.\n";
-    } else {
+    }
+    else
+    {
         explosionSound.setBuffer(explosionBuffer);
     }
-=======
->>>>>>> Stashed changes
 }
 
 void Enemie::update()
@@ -70,17 +69,7 @@ void Enemie::draw(RenderTarget &rt, RenderStates rs) const
     rt.draw(sprite, rs);
 }
 
-//  CARGA EL ARCHIVO DE AUDIO AQUÍ
-if (!shootBuffer.loadFromFile("sounds/shootenemy.wav"))
-{
-    cerr << "Error: No se pudo cargar el sonido de disparo.\n";
-}
-else
-{
-    shootSound.setBuffer(shootBuffer);
-}
-
-void Enemie::Update()
+void Enemie::update()
 {
     if (timer >= cadencia)
     {
@@ -112,22 +101,7 @@ void Enemie::AumentarCadencia()
     cadencia--;
 }
 
-void Enemie::Disparar()
-{
-    shootSound.play();
-}
-
-<<<<<<< Updated upstream
-void Enemie::Morir() {
-    explosionSound.play(); // NUEVO: reproduce sonido de explosión
-}
-
-void Enemie::draw(RenderTarget &rt, RenderStates rs) const {
-    rt.draw(sprite, rs);
-}
-=======
 void Enemie::draw(RenderTarget &rt, RenderStates rs) const
 {
     rt.draw(sprite, rs);
 }
->>>>>>> Stashed changes

@@ -20,13 +20,6 @@ Player::Player(int x, int y, Texture &texture)
     {
         shootSound.setBuffer(shootBuffer);
     }
-
-    //  AÑADIDO: cargar sonido de explosión
-    if (!deathBuffer.loadFromFile("sounds/explosionjugador.wav")) {
-        cerr << "Error: No se pudo cargar el sonido de explosión.\n";
-    } else {
-        deathSound.setBuffer(deathBuffer);
-    }
 }
 
 void Player::update()
@@ -61,14 +54,6 @@ Vector2f Player::pos()
     return sprite.getPosition();
 }
 
-<<<<<<< Updated upstream
-//  AÑADIDO: método para reproducir sonido de muerte
-void Player::die() {
-    deathSound.play();
-}
-
-void draw(RenderTarget &rt, RenderStates rs) const{
-=======
 void Player::QuitarVida()
 {
     vida--;
@@ -81,6 +66,5 @@ bool Player::Vivo()
 
 void Player::draw(RenderTarget &rt, RenderStates rs) const
 {
->>>>>>> Stashed changes
     rt.draw(sprite, rs);
 }

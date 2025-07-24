@@ -13,17 +13,14 @@ private:
     int timer;
     int cadencia;
     Vector2f point;
-<<<<<<< Updated upstream
-    
+
     // sonido de disparo
-    SoundBuffer shootBuffer; 
+    SoundBuffer shootBuffer;
     Sound shootSound;
 
     // sonido de explosión
     SoundBuffer explosionBuffer;
     Sound explosionSound;
-=======
->>>>>>> Stashed changes
 
 public:
     Enemie(int x, int y, Texture &texture, Vector2f p);
@@ -31,10 +28,5 @@ public:
     void ChangeDir();
     Vector2f Pos();
     void AumentarCadencia();
-<<<<<<< Updated upstream
-    void Disparar(); 
-    void Morir(); // NUEVO: método para reproducir sonido de explosión
-=======
->>>>>>> Stashed changes
     virtual void draw(RenderTarget &rt, RenderStates rs) const;
 };
