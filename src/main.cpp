@@ -3,6 +3,7 @@
 #include <vector>
 #include "Jugador.hpp"
 #include "Bala.hpp"
+#include "Muro.hpp"
 <<<<<<< HEAD
 #include "Enemie.hpp"
 =======
@@ -16,7 +17,10 @@ using namespace sf;
 void UpdatePlayer(Player &player, bool &bulletActive)
 void UpdateBulletPlayer(Bullet &bulletPlayer, bool &bulletActive, vector<vector<Enemie>> &enemies , IntRect &bulletRect, IntRect &enemieRect);
 void UpdateEnemies (vector<vector<Enemie>> &enemies, int &dirEnemies, int &maxX, int &minX);
- 
+void UpdateMuro(Bullet &bulletPlayer, vector<Bullet> &bulletsEnemies, vector<Muro> &muro); 
+
+intRect muroRect;
+
 
 int main(){
 
@@ -116,14 +120,20 @@ int main()
             if (i==0){
                 sectionSpritesheet = Vector2f(0,0);
             }else if (i<3){
-                sectionSpritesheet = Vector2f(0,9);
+                sectionSpritesheet = Vector2f(0,9+(8*4+4));
             }else if (i<5){
-                sectionSpritesheet = Vector2f(0,18);
+                sectionSpritesheet = Vector2f(0,18+(8*4+4)*2);
             }else if (i<7){
-                sectionSpritesheet = Vector2f(0,27);
+                sectionSpritesheet = Vector2f(0,27+(8*4+4)*3);
             }
             enemie[i][j] = Enemie(j*30+24, i*30+24, spritesheet,sectionSpritesheet); 
          }
+     }
+
+     vector<Muro> muro(3,Muro(0,0spritessheet));
+
+     for(int i = 0; i < 3 i++){
+        muro[i]=Muro(70+200*i,460,spritesheet);
      }
 
     RenderWindow window(VideoMode(600,600),"Space Invaders");
@@ -141,6 +151,12 @@ int main()
         UpdateBulletPlayer(bulletPlayer, bulletActive, enemies, bulletRect, enemieRect);
         UpdateEnemies(enemies, dirEnemies, maxX, minX);
 
+        for(int i = 0; i < (int)enemies.size(); i++) {
+            for(int i = 0; i < (int)enemies.size(); i++) {
+                if(enemies[i][j].Pos().y<=480)
+                window.clear();
+            }
+        }
         maxX=0;
         minX=600;
 
@@ -204,6 +220,9 @@ int main()
                 window.draw(enemies[i][j]);
             } 
         }
+
+        for(int i = 0; i < 3; i++) window.draw(muro[i]);
+        
         window.display();  
     } 
     return 0;      
@@ -239,4 +258,11 @@ void UpdateBulletPlayer(Bullet &bulletPlayer, bool &bulletActive, vector<vector<
         }
                 
         } 
+}
+
+void UpdateMuro(Bullet &bulletPlayer, vector<Bullet> &bulletsEnemies, vector<Muro> &muro); {
+    if(bullectActive){
+        bulletRect=IntRect()
+    }
+    bulletRect=IntRect()
 }
