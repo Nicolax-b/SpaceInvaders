@@ -1,83 +1,101 @@
-#include <iostream>
-#include <SFML/Graphics.hpp>
 #include "Menu.hpp"
-using namespace sf;
 
-Menu::Menu(float width, float height) 
-{
+/**
+ * @brief Constructor de la clase Menu.
+ * 
+ * Inicializa las opciones del menú principal, carga la fuente y
+ * posiciona las opciones "Play" y "Exit" en pantalla.
+ * 
+ * @param width Ancho de la ventana para centrar las opciones horizontalmente.
+ * @param height Alto de la ventana para distribuir verticalmente las opciones.
+ */
+Menu::Menu(float width, float height) {
     if (!font.loadFromFile("arial.ttf")) {
-        // Manejo de error si deseas
+        std::cerr << "Error al cargar la fuente.\n";
     }
 
+    // Configuración de la opción "Play"
     main_menu[0].setFont(font);
     main_menu[0].setFillColor(Color::Green);
     main_menu[0].setString("Play");
     main_menu[0].setCharacterSize(50);
-    main_menu[0].setPosition(Vector2f(width / 2, height / 3));
+    main_menu[0].setPosition(Vector2f(width / 2.f - 50.f, height / 3.f));
 
+    // Configuración de la opción "Exit"
     main_menu[1].setFont(font);
     main_menu[1].setFillColor(Color::Red);
     main_menu[1].setString("Exit");
     main_menu[1].setCharacterSize(50);
-    main_menu[1].setPosition(Vector2f(width / 2, height / 3 * 2));
+    main_menu[1].setPosition(Vector2f(width / 2.f - 50.f, height / 3.f * 2.f));
 
-    main_menu_selected = 0;
+    main_menu_selected = 0; ///< Índice de la opción actualmente seleccionada.
 }
 
+/**
+ * @brief Destructor de la clase Menu.
+ * 
+ * No realiza operaciones especiales, se mantiene vacío.
+ */
 Menu::~Menu() {}
 
-void Menu::draw(sf::RenderWindow &window) 
-{
-    for (int i = 0; i < 2; i++) {
+/**
+ * @brief Dibuja todas las opciones del menú en la ventana proporcionada.
+ * 
+ * @param window Referencia a la ventana SFML donde se dibujará el menú.
+ */
+void Menu::draw(RenderWindow &window) {
+    for (int i = 0; i < Max_main_menu; i++) {
         window.draw(main_menu[i]);
     }
 }
 
-void Menu::MoveDown()
-{
-    main_menu[main_menu_selected].setFillColor(Color::White);
-    main_menu_selected++;
-
-    if (main_menu_selected > 1) {
-        main_menu_selected = 0;
-    }
-
-    main_menu[main_menu_selected].setFillColor(Color::Green);
-}
-
-void Menu::MoveUp()
-{
+/**
+ * @brief Cambia la selección del menú hacia arriba.
+ * 
+ * Modifica el color para reflejar la nueva opción seleccionada,
+ * implementando un ciclo continuo cuando se supera el límite superior.
+ */
+void Menu::MoveUp() {
     main_menu[main_menu_selected].setFillColor(Color::White);
     main_menu_selected--;
-
-    if (main_menu_selected < 0) {
-        main_menu_selected = 1;
-    }
-
+    if (main_menu_selected < 0)
+        main_menu_selected = Max_main_menu - 1;
     main_menu[main_menu_selected].setFillColor(Color::Green);
 }
 
-void Menu::Enter()
-{
-    if (main_menu_selected == 0)
-    {
-        // Acción para Play
-    }
-    else if (main_menu_selected == 1) 
-    {
-        exit(0);
-    }
+/**
+ * @brief Cambia la selección del menú hacia abajo.
+ * 
+ * Modifica el color para reflejar la nueva opción seleccionada,
+ * implementando un ciclo continuo cuando se supera el límite inferior.
+ */
+void Menu::MoveDown() {
+    main_menu[main_menu_selected].setFillColor(Color::White);
+    main_menu_selected++;
+    if (main_menu_selected >= Max_main_menu)
+        main_menu_selected = 0;
+    main_menu[main_menu_selected].setFillColor(Color::Green);
 }
 
+/**
+ * @brief Inicia la reproducción de la música de fondo del menú.
+ * 
+ * Intenta cargar el archivo de audio especificado y, en caso de éxito,
+ * ajusta el volumen y reproduce la música.
+ * En caso de error, muestra un mensaje en la consola.
+ */
 void Menu::PlayMusic() {
-    if (!menuMusic.openFromFile("sounds/menu_music.ogg")) {
+    if (!menuMusic.openFromFile("Music/menu.ogg")) {
         std::cerr << "Error al cargar la música del menú.\n";
     } else {
-        menuMusic.setLoop(true);
+        menuMusic.setVolume(60);
         menuMusic.play();
     }
 }
 
+/**
+ * @brief Detiene la reproducción de la música de fondo del menú.
+ */
 void Menu::StopMusic() {
     menuMusic.stop();
 }
