@@ -9,6 +9,8 @@
 #include "Enemie.hpp"
 #include "Menu.hpp"
 #include "Muro.hpp"
+#include "Win.hpp"
+#include "Lose.hpp"
 
 using namespace std;
 using namespace sf;
@@ -172,28 +174,38 @@ int main()
         UpdateBulletsEnemies(player);
         UpdateMuro(muro,bulletPlayer);
 
-        if (!player.Vivo()){
-            system("clear"); cout << "Perdiste\n"; window.close();
+        if (!player.Vivo())
+        {
+            // Si el jugador no tiene vida, mostrar pantalla de derrota
+            window.close();
+            musicaJuego.stop();
+            MostrarPantallaLose();  
+            return 0;
         }
         for(int i = 0; i < (int)enemies.size(); i++){
 			for(int j = 0; j < (int)enemies[i].size(); j++){
-				if(enemies[i][j].Pos().y>=480){
-					system("clear");
-					cout<<"Perdiste\n";
-					window.close();
-					return 0;
-				}
+				if(enemies[i][j].Pos().y>=480)
+                {
+                    // Si un enemigo llega al borde inferior, mostrar pantalla de derrota
+                    window.close();
+                    musicaJuego.stop();
+                    MostrarPantallaLose();
+                    return 0;
+                }
 			}
 		}
         cantEnemies=0;
 		
 		for(int i = 0; i < (int)enemies.size(); i++) cantEnemies+=(int)enemies[i].size();
 		
-		if(cantEnemies==0){
-			system("clear");
-			cout<<"Ganaste\n";
-			window.close();
-		}
+		if(cantEnemies==0)
+        {
+            // Si no hay enemigos, mostrar pantalla de victoria
+            window.close();
+            musicaJuego.stop();
+            MostrarPantallaWin();
+            return 0;
+        }
 
         window.clear();
 
@@ -225,6 +237,94 @@ int main()
         }
     }
     return 0;
+}
+
+void MostrarPantallaWin()
+{
+    RenderWindow winWindow(VideoMode(600, 600), "¡Ganaste!");
+    Win win(winWindow.getSize().x, winWindow.getSize().y);
+    win.PlayMusic();
+
+    while (winWindow.isOpen())
+    {
+        Event event;
+        while (winWindow.pollEvent(event))
+        {
+            if (event.type == Event::Closed)
+                winWindow.close();
+
+            if (event.type == Event::KeyPressed)
+            {
+                if (event.key.code == Keyboard::Up)
+                    win.MoveUp();
+                else if (event.key.code == Keyboard::Down)
+                    win.MoveDown();
+                else if (event.key.code == Keyboard::Return)
+                {
+                    int selected = win.GameWinPressed();  // Revisa que tu método se llame así
+                    if (selected == 0) // Play Again
+                    {
+                        win.StopMusic();
+                        winWindow.close();
+                        main(); // Reinicia el juego
+                        return;
+                    }
+                    else if (selected == 1) // Exit
+                    {
+                        winWindow.close();
+                        exit(0);
+                    }
+                }
+            }
+        }
+        winWindow.clear();
+        win.draw(winWindow);
+        winWindow.display();
+    }
+}
+
+void MostrarPantallaLose()
+{
+    RenderWindow loseWindow(VideoMode(600, 600), "Perdiste");
+    Lose lose(loseWindow.getSize().x, loseWindow.getSize().y);
+    lose.PlayMusic();
+
+    while (loseWindow.isOpen())
+    {
+        Event event;
+        while (loseWindow.pollEvent(event))
+        {
+            if (event.type == Event::Closed)
+                loseWindow.close();
+
+            if (event.type == Event::KeyPressed)
+            {
+                if (event.key.code == Keyboard::Up)
+                    lose.MoveUp();
+                else if (event.key.code == Keyboard::Down)
+                    lose.MoveDown();
+                else if (event.key.code == Keyboard::Return)
+                {
+                    int selected = lose.GameLosePressed();
+                    if (selected == 0) // Play Again
+                    {
+                        lose.StopMusic();
+                        loseWindow.close();
+                        main();
+                        return;
+                    }
+                    else if (selected == 1) // Exit
+                    {
+                        loseWindow.close();
+                        exit(0);
+                    }
+                }
+            }
+        }
+        loseWindow.clear();
+        lose.draw(loseWindow);
+        loseWindow.display();
+    }
 }
 
 void UpdatePlayer(Player &player, bool &bulletActive, Bullet &bulletPlayer)
