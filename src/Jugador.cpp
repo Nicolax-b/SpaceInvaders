@@ -22,9 +22,9 @@ Player::Player(int x, int y, Texture &texture)
     }
 }
 
-void Player::update()
+void Player::Update()
 {
-    if (Keyboard::isKeyPressed(Keyboard::Right) && sprite.getPosition().x + vel < 552)
+    if (Keyboard::isKeyPressed(Keyboard::Right) && sprite.getPosition().x + vel < 552) //considerar para los sprites y mando
     {
         sprite.move(vel, 0);
     }
@@ -36,7 +36,7 @@ void Player::update()
 
 bool Player::Shoot()
 {
-    if (Keyboard::isKeyPressed(Keyboard::Space) && !shoot)
+    if (Keyboard::isKeyPressed(Keyboard::Space) && !shoot) //considerar mando
     {
         shoot = true;
         shootSound.play(); // Aquí reproduzco el sonido al disparar
@@ -49,7 +49,7 @@ bool Player::Shoot()
     return false;
 }
 
-Vector2f Player::pos()
+Vector2f Player::Pos()
 {
     return sprite.getPosition();
 }

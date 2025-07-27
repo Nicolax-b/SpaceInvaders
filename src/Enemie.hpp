@@ -14,17 +14,17 @@ private:
     int cadencia;
     Vector2f point;
 
-    // sonido de disparo
+   /*  // sonido de disparo
     SoundBuffer shootBuffer;
     Sound shootSound;
 
     // sonido de explosión
     SoundBuffer explosionBuffer;
-    Sound explosionSound;
+    Sound explosionSound; */
 
 public:
     Enemie(int x, int y, Texture &texture, Vector2f p);
-    void update();
+    void Update();
     void ChangeDir();
     Vector2f Pos();
     void AumentarCadencia();

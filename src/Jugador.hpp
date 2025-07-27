@@ -17,10 +17,10 @@ private:
 
 public:
     Player(int x, int y, Texture &texture);
-    void update();
+    void Update();
     bool Shoot();
     void QuitarVida();
     bool Vivo();
-    Vector2f pos();
+    Vector2f Pos();
     virtual void draw(RenderTarget &rt, RenderStates rs) const;
 };

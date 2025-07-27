@@ -9,7 +9,7 @@ Bullet::Bullet(int x, int y, Texture &texture, IntRect intRect, int v)
     vel = v;
 }
 
-void Bullet::update() {
+void Bullet::Update() {
     sprite.move(sf::Vector2f(0, vel));
 }
 
