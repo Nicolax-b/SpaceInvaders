@@ -10,7 +10,7 @@
 using namespace std;
 using namespace sf;
 
-intRect muroRect;
+//intRect muroRect;
 
 void UpdatePlayer(Player &player, bool &bulletActive, Bullet &bulletPlayer);
 void UpdateBulletPlayer(Bullet &bulletPlayer, bool &bulletActive, vector<vector<Enemie>> &enemies, IntRect &bulletRect, IntRect &enemieRect);

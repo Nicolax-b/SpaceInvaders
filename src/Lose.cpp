@@ -6,7 +6,6 @@ Lose::Lose(float width, float height)
     if (!font.loadFromFile("fonts/ARCADE_N.TTF")) {
         std::cerr << "Error al cargar la fuente" << std::endl;
     }
-
     // -------- GAME OVER (centrado arriba) --------
     gameOverText.setFont(font);
     gameOverText.setFillColor(Color::Blue);
@@ -15,7 +14,6 @@ Lose::Lose(float width, float height)
     FloatRect textRect = gameOverText.getLocalBounds();
     gameOverText.setOrigin(textRect.left + textRect.width / 2.0f, textRect.top + textRect.height / 2.0f);
     gameOverText.setPosition(width / 2.f, height / 6.f);
-
      // -------- OPCIÓN: Play Again (centrado) --------
     main_Game_Lose[0].setFont(font);
     main_Game_Lose[0].setFillColor(Color::Green);
@@ -24,7 +22,6 @@ Lose::Lose(float width, float height)
     textRect = main_Game_Lose[0].getLocalBounds();
     main_Game_Lose[0].setOrigin(textRect.left + textRect.width / 2.0f, textRect.top + textRect.height / 2.0f);
     main_Game_Lose[0].setPosition(width / 2.f, height / 2.f);
-    
     // -------- OPCIÓN: Exit (centrado abajo) --------
     main_Game_Lose[1].setFont(font);
     main_Game_Lose[1].setFillColor(Color::Red);
@@ -33,7 +30,6 @@ Lose::Lose(float width, float height)
     textRect = main_Game_Lose[1].getLocalBounds();
     main_Game_Lose[1].setOrigin(textRect.left + textRect.width / 2.0f, textRect.top + textRect.height / 2.0f);
     main_Game_Lose[1].setPosition(width / 2.f, height / 2.f + 50);
-
 
     if (!LoseMusic.openFromFile("Music/game-over-39-199830.ogg")) {
         std::cerr << "Error loading lose music" << std::endl;
@@ -55,7 +51,6 @@ void Lose::MoveUp()
         main_Game_Lose[main_Game_Lose_selected].setFillColor(sf::Color::Green);
     }
 }
-
 void Lose::MoveDown()
 {
     if (main_Game_Lose_selected + 1 < Max_Game_Lose)
@@ -65,12 +60,10 @@ void Lose::MoveDown()
         main_Game_Lose[main_Game_Lose_selected].setFillColor(sf::Color::Green);
     }
 }
-
 void Lose::PlayMusic()
 {
     LoseMusic.play();
 }
-
 void Lose::StopMusic()
 {
     LoseMusic.stop();

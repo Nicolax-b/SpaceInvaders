@@ -2,6 +2,7 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
+#include "InputHandler.hpp"
 
 #define Max_main_menu 2 ///< Número máximo de opciones del menú.
 
@@ -56,7 +57,8 @@ public:
      * 
      * @return int Índice de la opción seleccionada (0 a Max_main_menu - 1).
      */
-    int mainMenuPressed() {
+     int getSelectedOption() const;
+     int mainMenuPressed() {
         return main_menu_selected;
     }
 
@@ -70,7 +72,7 @@ public:
      */
     void StopMusic();
 
-private:
+    private:
     int main_menu_selected;          ///< Índice de la opción actualmente seleccionada.
     sf::Font font;                   ///< Fuente utilizada para mostrar el texto.
     sf::Text main_menu[Max_main_menu]; ///< Array con los textos de las opciones del menú.

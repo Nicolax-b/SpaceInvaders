@@ -103,3 +103,6 @@ void Menu::PlayMusic() {
 void Menu::StopMusic() {
     menuMusic.stop();
 }
+int Menu::getSelectedOption() const {
+    return main_menu_selected;
+}
