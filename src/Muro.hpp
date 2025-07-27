@@ -5,14 +5,14 @@
 using namespace std;
 using namespace sf;
 
-class muro : public Drawable{
+class Muro : public Drawable{
     private:
         vector<Sprite> sprites;
         vector<pair<int,int>> state;
     public:
         Muro(int x, int y, Texture &texture);
-        void Pos(vector<Vector2f> &pos);
+        void Pos(vector<pair<int,Vector2f>> &pos);
         void Update();
         void Colision(int indice, bool up);
         virtual void draw(RenderTarget &rt, RenderStates rs) const;
-}
+};
