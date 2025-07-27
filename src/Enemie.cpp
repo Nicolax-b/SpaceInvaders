@@ -14,9 +14,10 @@ Enemie::Enemie(int x, int y, Texture &texture, Vector2f p)
     sprite.setTextureRect(IntRect(point.x, point.y, 32, 32));
     sprite.setPosition(x, y);
     sprite.setScale(2.5, 2.5);
+   
 
     //  CARGA EL ARCHIVO DE AUDIO AQUÍ
-    /* if (!shootBuffer.loadFromFile("sounds/shootenemy.wav"))
+    if (!shootBuffer.loadFromFile("sounds/shootenemy.wav"))
     {
         cerr << "Error: No se pudo cargar el sonido de disparo.\n";
     }
@@ -33,7 +34,7 @@ Enemie::Enemie(int x, int y, Texture &texture, Vector2f p)
     else
     {
         explosionSound.setBuffer(explosionBuffer);
-    }   */
+    }   
 }
 void Enemie::Update()
 {
@@ -76,7 +77,7 @@ void Enemie::ActivarDisparo()
     {
         shoot = true;
         contadorDisparo = 180;
-        //shootSound.play(); // Reproducir sonido de disparo
+        shootSound.play(); // Reproducir sonido de disparo
         sprite.setTextureRect(IntRect(96, point.y, 30, 30)); // Cambiar a sprite de disparo
     }
 }

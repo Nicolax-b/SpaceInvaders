@@ -1,5 +1,6 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 
 using namespace std;
 using namespace sf;
@@ -16,13 +17,13 @@ private:
     bool shoot = false;
     int contadorDisparo = 0;
 
-   /*  // sonido de disparo
+   //sonido de disparo
     SoundBuffer shootBuffer;
     Sound shootSound;
 
     // sonido de explosión
     SoundBuffer explosionBuffer;
-    Sound explosionSound; */
+    Sound explosionSound; 
 
 public:
     Enemie(int x, int y, Texture &texture, Vector2f p);

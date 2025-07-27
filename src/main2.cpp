@@ -226,6 +226,8 @@ int main()
                     window.close();
                     musicaJuego.stop();
                     mostrarPantallaLose();
+                    score = 0; // Reiniciar el puntaje
+                    vida = 3;  // Reiniciar la vida
                     return 0;
                 }
             }
@@ -355,6 +357,8 @@ void mostrarPantallaLose()
                 {
                     lose.StopMusic();
                     loseWindow.close();
+                    score = 0; // Reiniciar el puntaje
+                    vida = 3;  // Reiniciar la vida
                     main(); // Reinicia
                 }
                 else if (selected == 1)
