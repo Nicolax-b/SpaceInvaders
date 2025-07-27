@@ -10,7 +10,7 @@
  * @param height Alto de la ventana para distribuir verticalmente las opciones.
  */
 Menu::Menu(float width, float height) {
-    if (!font.loadFromFile("arial.ttf")) {
+    if (!font.loadFromFile("ARCADE_N.TTF")) {
         std::cerr << "Error al cargar la fuente.\n";
     }
 

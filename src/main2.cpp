@@ -15,7 +15,8 @@
 
 using namespace std;
 using namespace sf;
-
+void mostrarPantallaWin();
+void mostrarPantallaLose();
 void UpdatePlayer(Player &player, bool &bulletActive, Bullet &bulletPlayer);
 void UpdateBulletPlayer(Bullet &bulletPlayer, bool &bulletActive, vector<vector<Enemie>> &enemies, IntRect &bulletRect, IntRect &enemieRect);
 void UpdateEnemies(vector<vector<Enemie>> &enemies);
@@ -194,7 +195,7 @@ int main()
             // Si el jugador no tiene vida, mostrar pantalla de derrota
             window.close();
             musicaJuego.stop();
-            MostrarPantallaLose();  
+            mostrarPantallaLose();  
             return 0;
         }
         for(int i = 0; i < (int)enemies.size(); i++){
@@ -204,7 +205,7 @@ int main()
                     // Si un enemigo llega al borde inferior, mostrar pantalla de derrota
                     window.close();
                     musicaJuego.stop();
-                    MostrarPantallaLose();
+                    mostrarPantallaLose();
                     return 0;
                 }
 			}
@@ -218,7 +219,7 @@ int main()
             // Si no hay enemigos, mostrar pantalla de victoria
             window.close();
             musicaJuego.stop();
-            MostrarPantallaWin();
+            mostrarPantallaWin();
             return 0;
         }
 
@@ -254,7 +255,7 @@ int main()
     return 0;
 }
 
-void MostrarPantallaWin()
+void mostrarPantallaWin()
 {
     RenderWindow winWindow(VideoMode(600, 600), "¡Ganaste!");
     Win win(winWindow.getSize().x, winWindow.getSize().y);
@@ -298,7 +299,7 @@ void MostrarPantallaWin()
     }
 }
 
-void MostrarPantallaLose()
+void mostrarPantallaLose()
 {
     RenderWindow loseWindow(VideoMode(600, 600), "Perdiste");
     Lose lose(loseWindow.getSize().x, loseWindow.getSize().y);

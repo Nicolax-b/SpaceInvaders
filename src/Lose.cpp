@@ -3,7 +3,7 @@
 Lose::Lose(float width, float height)
     : main_Game_Lose_selected(0)
 {
-    if (!font.loadFromFile("arial.ttf")) {
+    if (!font.loadFromFile("ARCADE_N.TTF.ttf")) {
         std::cerr << "Error loading font" << std::endl;
     }
 
@@ -35,4 +35,37 @@ void Lose::draw(sf::RenderWindow &window)
     for (int i = 0; i < Max_Game_Lose; i++) {
         window.draw(main_Game_Lose[i]);
     }
+}
+void Lose::MoveUp()
+{
+    if (main_Game_Lose_selected - 1 >= 0)
+    {
+        main_Game_Lose[main_Game_Lose_selected].setFillColor(sf::Color::White);
+        main_Game_Lose_selected--;
+        main_Game_Lose[main_Game_Lose_selected].setFillColor(sf::Color::Green);
+    }
+}
+
+void Lose::MoveDown()
+{
+    if (main_Game_Lose_selected + 1 < Max_Game_Lose)
+    {
+        main_Game_Lose[main_Game_Lose_selected].setFillColor(sf::Color::White);
+        main_Game_Lose_selected++;
+        main_Game_Lose[main_Game_Lose_selected].setFillColor(sf::Color::Green);
+    }
+}
+
+void Lose::PlayMusic()
+{
+    LoseMusic.play();
+}
+
+void Lose::StopMusic()
+{
+    LoseMusic.stop();
+}
+Lose::~Lose()
+{
+    // Destructor simple, sin recursos dinámicos que liberar
 }

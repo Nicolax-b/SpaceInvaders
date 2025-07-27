@@ -3,7 +3,7 @@
 Win::Win(float width, float height)
     : main_Game_Win_selected(0)
 {
-    if (!font.loadFromFile("arial.ttf")) {
+    if (!font.loadFromFile("ARCADE_N.TTF")) {
         std::cerr << "Error loading font" << std::endl;
     }
 
@@ -22,7 +22,7 @@ Win::Win(float width, float height)
     main_Game_Win[1].setFillColor(sf::Color::White);
 
     gameWinText.setFont(font);
-    gameWinText.setFillColor(Color::Purple);
+    gameWinText.setFillColor(Color::Yellow);
     gameWinText.setString("WELL DONE HERO¡¡¡");
     gameWinText.setCharacterSize(48);  // Más grande que las opciones
     gameWinText.setPosition(width / 2 - 100, height / 6);
@@ -39,4 +39,39 @@ void Win::draw(sf::RenderWindow &window)
     for (int i = 0; i < Max_Game_Win; i++) {
         window.draw(main_Game_Win[i]);
     }
+}
+void Win::MoveUp()
+{
+    if (main_Game_Win_selected - 1 >= 0)
+    {
+        main_Game_Win[main_Game_Win_selected].setFillColor(sf::Color::White);
+        main_Game_Win_selected--;
+        main_Game_Win[main_Game_Win_selected].setFillColor(sf::Color::Green);
+    }
+}
+
+void Win::MoveDown()
+{
+    if (main_Game_Win_selected + 1 < Max_Game_Win)
+    {
+        main_Game_Win[main_Game_Win_selected].setFillColor(sf::Color::White);
+        main_Game_Win_selected++;
+        main_Game_Win[main_Game_Win_selected].setFillColor(sf::Color::Green);
+    }
+}
+
+void Win::PlayMusic()
+{
+    WinMusic.play();
+}
+
+void Win::StopMusic()
+{
+    WinMusic.stop();
+}
+
+Win::~Win()
+{
+    // Destructor implementation if needed
+    // Currently, no dynamic memory allocation is done, so nothing specific to clean up
 }
