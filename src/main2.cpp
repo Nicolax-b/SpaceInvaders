@@ -1,10 +1,13 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <vector>
+#include <cstdlib> 
 #include <time.h>
 #include "Jugador.hpp"
 #include "Bala.hpp"
 #include "Enemie.hpp"
+#include "Menu.hpp"
 
 using namespace std;
 using namespace sf;
@@ -16,10 +19,72 @@ Texture spritesheet;
 int timer = 0;
 int cadencia = 100;
 vector<Bullet> bulletsEnemies;
+// Lista de canciones para reproducir aleatoriamente
+vector<string> canciones = {
+    "Music/Play1.ogg",
+    "Music/Play2.ogg"
+};
 
+Music musicaJuego;
+int cancionActual = -1;
+void ReproducirCancionAleatoria(vector<string>& canciones, Music& musicaJuego, int& cancionActual)
+{
+    int nuevaCancion;
+    do {
+        nuevaCancion = rand() % canciones.size();
+    } while (nuevaCancion == cancionActual && canciones.size() > 1);
+
+    cancionActual = nuevaCancion;
+
+    if (!musicaJuego.openFromFile(canciones[cancionActual])) {
+        cout << "No se pudo cargar la canción: " << canciones[cancionActual] << endl;
+        return;
+    }
+
+    musicaJuego.play();
+}
 
 int main()
 {
+    RenderWindow menuWindow(VideoMode(600, 600), "MENU SPACE INVADERS EPN");
+    Menu menu(menuWindow.getSize().x, menuWindow.getSize().y);
+    menu.PlayMusic();
+
+    while (menuWindow.isOpen())
+    {
+        Event event;
+        while (menuWindow.pollEvent(event))
+        {
+            if (event.type == Event::Closed)
+                menuWindow.close();
+
+            if (event.type == Event::KeyPressed)
+            {
+                if (event.key.code == Keyboard::Up)
+                    menu.MoveUp();
+                else if (event.key.code == Keyboard::Down)
+                    menu.MoveDown();
+                else if (event.key.code == Keyboard::Return)
+                {
+                    int selected = menu.mainMenuPressed();
+                    if (selected == 0) // Play
+                    {
+                        menu.StopMusic();
+                        menuWindow.close(); // Salir del menú
+                    }
+                    else if (selected == 1) // Exit
+                    {
+                        menuWindow.close();
+                        return 0; // Salir del programa
+                    }
+                }
+            }
+        }
+
+        menuWindow.clear();
+        menu.draw(menuWindow);
+        menuWindow.display();
+    }
     if (!spritesheet.loadFromFile("spritesheet.png"))
     {
         cout << "Error al cargar la textura\n";
@@ -60,6 +125,9 @@ int main()
     }
     RenderWindow window(VideoMode(600, 600), "Space Invaders EPN");
     window.setFramerateLimit(60);
+    // Reproducir música de fondo
+    srand(time(NULL));
+    ReproducirCancionAleatoria(canciones, musicaJuego, cancionActual);
 
     while (window.isOpen())
     {
@@ -90,6 +158,11 @@ int main()
             window.draw(bulletsEnemies[i]);
         }
         window.display();
+        // Reproducir música de fondo
+        if (musicaJuego.getStatus() == SoundSource::Status::Stopped)
+        {
+            ReproducirCancionAleatoria(canciones, musicaJuego, cancionActual);
+        }
     }
     return 0;
 }
