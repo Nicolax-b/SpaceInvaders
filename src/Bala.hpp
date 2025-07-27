@@ -11,7 +11,7 @@ class Bullet : public Drawable {
         int vel;
     public:
         Bullet(int x, int y, Texture &texture, IntRect intRect,int v);
-        void update(); 
+        void Update(); 
         Vector2f Pos();  
         virtual void draw(RenderTarget &rt, RenderStates rs) const;
 };
