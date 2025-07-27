@@ -5,20 +5,36 @@
 #include "Jugador.hpp"
 #include "Bala.hpp"
 #include "Enemie.hpp"
+#include "Muro.hpp"
 
 using namespace std;
 using namespace sf;
 
 void UpdatePlayer(Player &player, bool &bulletActive, Bullet &bulletPlayer);
 void UpdateBulletPlayer(Bullet &bulletPlayer, bool &bulletActive, vector<vector<Enemie>> &enemies, IntRect &bulletRect, IntRect &enemieRect);
-void UpdateEnemies(vector<vector<Enemie>> &enemies, int &dirEnemies, int &minX, int &maxX);
+void UpdateEnemies(vector<vector<Enemie>> &enemies);
 void UpdateBulletsEnemies(Player &player);
+void UpdateMuro(vector<Muro> &muro,Bullet &bulletPlayer);
+
 Texture spritesheet;
+
 int timer = 0;
 int cadencia = 125;
+
+int dirEnemies=1; //1 para derecha, -1 para izquierda
+int maxX,minX;
+int cantEnemies;
+
 vector<Bullet> bulletsEnemies;
+vector<pair<int,Vector2f>> posicionMuro;
+Vector2f sectionSpritesheet;
+
 IntRect playerRect;
 IntRect bulletRect;
+IntRect enemieRect;
+IntRect muroRect;
+
+bool bulletActive = false;
 
 int main()
 {
@@ -27,19 +43,17 @@ int main()
         cout << "Error al cargar la textura\n";
     };
     Player player(288, 555, spritesheet);
-    bool bulletActive = false;
+    
     Bullet bulletPlayer(0, 0, spritesheet, IntRect(0, 0, 0, 0), 0);
-    IntRect enemieRect;
+
 
     vector<vector<Enemie>> enemies(7, vector<Enemie>(12, Enemie(0, 0, spritesheet, Vector2f(0, 0))));
     Vector2f sectionSpritesheet;
-    int dirEnemies = 1; // 1 para derecha, -1 para izquierda
-    int maxX, minX;
+
     for (int i = 0; i < (int)enemies.size(); i++)
     {
         for (int j = 0; j < (int)enemies[i].size(); j++)
-        {
-            enemies[i][j] = Enemie(i * 30 + 24, j * 30 + 24, spritesheet, Vector2f(0, 0)); // Considerar para los sprites
+        { // Considerar para los sprites
             if (i == 0)
             {
                 sectionSpritesheet = Vector2f(0, 0);
@@ -59,6 +73,13 @@ int main()
             enemies[i][j] = Enemie(j * 30 + 24, i * 30 + 24, spritesheet, sectionSpritesheet);
         }
     }
+
+    vector<Muro> muro(3,Muro(0,0,spritesheet));
+	
+	for(int i = 0; i < 3; i++){
+		muro[i]=Muro(70+200*i,460,spritesheet); //considerar sprites
+	}
+
     RenderWindow window(VideoMode(600, 600), "Space Invaders EPN");
     window.setFramerateLimit(60);
 
@@ -70,13 +91,38 @@ int main()
             if (event.type == Event::Closed)
                 window.close();
         }
+
         UpdatePlayer(player, bulletActive, bulletPlayer);
         UpdateBulletPlayer(bulletPlayer, bulletActive, enemies, bulletRect, enemieRect);
-        UpdateEnemies(enemies, dirEnemies, minX, maxX);
+        UpdateEnemies(enemies);
         UpdateBulletsEnemies(player);
-        if (player.Vivo() == false)
-            window.close();
+        UpdateMuro(muro,bulletPlayer);
+
+        if (!player.Vivo()){
+            system("clear"); cout << "Perdiste\n"; window.close();
+        }
+        for(int i = 0; i < (int)enemies.size(); i++){
+			for(int j = 0; j < (int)enemies[i].size(); j++){
+				if(enemies[i][j].Pos().y>=480){
+					system("clear");
+					cout<<"Perdiste\n";
+					window.close();
+					return 0;
+				}
+			}
+		}
+        cantEnemies=0;
+		
+		for(int i = 0; i < (int)enemies.size(); i++) cantEnemies+=(int)enemies[i].size();
+		
+		if(cantEnemies==0){
+			system("clear");
+			cout<<"Ganaste\n";
+			window.close();
+		}
+
         window.clear();
+
         for (int i = 0; i < (int)bulletsEnemies.size(); i++)
         {
             window.draw(bulletsEnemies[i]);
@@ -91,6 +137,10 @@ int main()
             {
                 window.draw(enemies[i][j]);
             }
+        }
+        for (int i = 0; i<3; i++)
+        {
+            window.draw(muro[i]);
         }
         window.draw(player);
         window.display();
@@ -145,7 +195,7 @@ void UpdateBulletPlayer(Bullet &bulletPlayer, bool &bulletActive, vector<vector<
         }
     }
 }
-void UpdateEnemies(vector<vector<Enemie>> &enemies, int &dirEnemies, int &minX, int &maxX)
+void UpdateEnemies(vector<vector<Enemie>> &enemies)
 {
     maxX = 0;
     minX = 600;
@@ -207,5 +257,48 @@ void UpdateBulletsEnemies(Player &player)
             bulletsEnemies.erase(bulletsEnemies.begin() + i);
             player.QuitarVida();
         }
+    }
+}
+void UpdateMuro(vector<Muro> &muro,Bullet &bulletPlayer)
+{
+    if (bulletActive)
+    {
+        bulletRect= IntRect(bulletPlayer.Pos().x, bulletPlayer.Pos().y, 3, 8);
+        for (int i = 0; i < 3; i++)
+        {
+            muro[i].Pos(posicionMuro);
+            for(int i=0; i < 3; i++){
+                muroRect=IntRect(posicionMuro[i].second.x, posicionMuro[i].second.y, 24, 24);
+                if (muroRect.intersects(bulletRect))
+                {
+                    muro[i].Colision(posicionMuro[i].first, false); // Considerar sprites
+                    bulletActive = false; // Desactivar la bala
+                }
+            }
+            if(!bulletActive) break; // Si la bala ya no está activa, salir del bucle
+        }
+    }
+    bool elim = false;
+    for (int h=0; h<(int)bulletsEnemies.size();h++){
+    bulletRect= IntRect(bulletsEnemies[h].Pos().x, bulletsEnemies[h].Pos().y, 3, 8);
+        for (int i = 0; i < 3; i++)
+        {
+            muro[i].Pos(posicionMuro);
+            for(int j=0; j < (int) posicionMuro.size(); j++){
+                muroRect=IntRect(posicionMuro[j].second.x, posicionMuro[j].second.y, 24, 24);
+                if (muroRect.intersects(bulletRect))
+                {
+                    muro[i].Colision(posicionMuro[j].first, true); // Considerar sprites
+                    bulletsEnemies.erase(bulletsEnemies.begin() + h); // Eliminar la bala enemiga
+                    elim = true;
+                    break;
+                }
+            }
+            if(elim) break; // Si la bala ya no está activa, salir del bucle
+        }
+    }
+    for (int i = 0; i < 3; i++)
+    {
+        muro[i].Update(); // Actualizar el muro
     }
 }
