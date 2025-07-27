@@ -74,7 +74,7 @@ void ReproducirCancionAleatoria(vector<string>& canciones, Music& musicaJuego, i
 
 int main()
 {
-    RenderWindow menuWindow(VideoMode(1920, 1080), "MENU SPACE INVADERS EPN");
+    RenderWindow menuWindow(VideoMode::getDesktopMode(), "MENU SPACE INVADERS EPN", Style::Fullscreen);
     Menu menu(menuWindow.getSize().x, menuWindow.getSize().y);
     menu.PlayMusic();
 
@@ -108,7 +108,6 @@ int main()
                 }
             }
         }
-
         menuWindow.clear();
         menu.draw(menuWindow);
         menuWindow.display();
@@ -257,7 +256,7 @@ int main()
 
 void mostrarPantallaWin()
 {
-    RenderWindow winWindow(VideoMode(600, 600), "¡Ganaste!");
+    RenderWindow winWindow(VideoMode::getDesktopMode(), "¡Ganaste!",Style::Fullscreen);
     Win win(winWindow.getSize().x, winWindow.getSize().y);
     win.PlayMusic();
 
@@ -301,7 +300,7 @@ void mostrarPantallaWin()
 
 void mostrarPantallaLose()
 {
-    RenderWindow loseWindow(VideoMode(600, 600), "Perdiste");
+    RenderWindow loseWindow(VideoMode::getDesktopMode(), "Perdiste", Style::Fullscreen);
     Lose lose(loseWindow.getSize().x, loseWindow.getSize().y);
     lose.PlayMusic();
 

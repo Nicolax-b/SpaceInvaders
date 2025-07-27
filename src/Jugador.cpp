@@ -2,6 +2,7 @@
 #include <SFML/Audio.hpp>
 #include <iostream>
 
+
 Player::Player(int x, int y, Texture &texture)
 {
     sprite.setTexture(texture);
@@ -24,6 +25,7 @@ Player::Player(int x, int y, Texture &texture)
 
 void Player::Update()
 {
+    //Teclado
     if (Keyboard::isKeyPressed(Keyboard::Right) && sprite.getPosition().x + vel < 1840) //considerar para los sprites y mando
     {
         sprite.move(vel, 0);
@@ -32,10 +34,25 @@ void Player::Update()
     {
         sprite.move(vel * -1, 0);
     }
+    //Mando
+    if (Joystick::isConnected(0))
+    {
+        float axisX = Joystick::getAxisPosition(0, Joystick::X);
+
+        if (axisX > 50 && sprite.getPosition().x + vel < 1840)
+        {
+            sprite.move(vel, 0);
+        }
+        else if (axisX < -50 && sprite.getPosition().x - vel > 0)
+        {
+            sprite.move(-vel, 0);
+        }
+    }
 }
 
 bool Player::Shoot()
 {
+    //Teclado
     if (Keyboard::isKeyPressed(Keyboard::Space) && !shoot) //considerar mando
     {
         shoot = true;
@@ -46,6 +63,21 @@ bool Player::Shoot()
     {
         shoot = false;
     }
+    //Mando
+    if (Joystick::isConnected(0))
+    {
+        if (Joystick::isButtonPressed(0, 0) && !shoot)
+        {
+            shoot = true;
+            shootSound.play();
+            return true;
+        }
+        else if (!Joystick::isButtonPressed(0, 0))
+        {
+            shoot = false;
+        }
+    }
+
     return false;
 }
 

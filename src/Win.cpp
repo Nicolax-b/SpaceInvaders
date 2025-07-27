@@ -3,31 +3,38 @@
 Win::Win(float width, float height)
     : main_Game_Win_selected(0)
 {
-    if (!font.loadFromFile("ARCADE_N.TTF")) {
-        std::cerr << "Error loading font" << std::endl;
+    if (!font.loadFromFile("fonts/ARCADE_N.TTF")) {
+        std::cerr << "Error al cargar la fuente" << std::endl;
     }
 
-    main_Game_Win[0].setFont(font);
-    main_Game_Win[0].setFillColor(Color::Green);
-    main_Game_Win[0].setString("Play Again");
-    main_Game_Win[0].setPosition(width / 2 - 50, height / 2 - 20);
-    main_Game_Win[0].setCharacterSize(24);
-    main_Game_Win[0].setFillColor(sf::Color::White);
-
-    main_Game_Win[1].setFont(font);
-    main_Game_Win[1].setFillColor(Color::Red);
-    main_Game_Win[1].setString("Exit");
-    main_Game_Win[1].setPosition(width / 2 - 50, height / 2 + 20);
-    main_Game_Win[1].setCharacterSize(24);
-    main_Game_Win[1].setFillColor(sf::Color::White);
-
+     // -------- Texto principal centrado --------
     gameWinText.setFont(font);
     gameWinText.setFillColor(Color::Yellow);
     gameWinText.setString("WELL DONE HERO¡¡¡");
-    gameWinText.setCharacterSize(48);  // Más grande que las opciones
-    gameWinText.setPosition(width / 2 - 100, height / 6);
+    gameWinText.setCharacterSize(60);
     gameWinText.setOutlineColor(Color::White);
     gameWinText.setOutlineThickness(2);
+    FloatRect textRect = gameWinText.getLocalBounds();
+    gameWinText.setOrigin(textRect.left + textRect.width / 2.0f, textRect.top + textRect.height / 2.0f);
+    gameWinText.setPosition(width / 2.f, height / 6.f);
+
+    // -------- Opción: Play Again centrado --------
+    main_Game_Win[0].setFont(font);
+    main_Game_Win[0].setFillColor(Color::Green);
+    main_Game_Win[0].setString("Play Again");
+    main_Game_Win[0].setCharacterSize(40);
+    textRect = main_Game_Win[0].getLocalBounds();
+    main_Game_Win[0].setOrigin(textRect.left + textRect.width / 2.0f, textRect.top + textRect.height / 2.0f);
+    main_Game_Win[0].setPosition(width / 2.f, height / 2.f - 20.f);
+
+    // -------- Opción: Exit centrado --------
+    main_Game_Win[1].setFont(font);
+    main_Game_Win[1].setFillColor(Color::Red);
+    main_Game_Win[1].setString("Exit");
+    main_Game_Win[1].setCharacterSize(40);
+    textRect = main_Game_Win[1].getLocalBounds();
+    main_Game_Win[1].setOrigin(textRect.left + textRect.width / 2.0f, textRect.top + textRect.height / 2.0f);
+    main_Game_Win[1].setPosition(width / 2.f, height / 2.f + 20.f);
 
     if (!WinMusic.openFromFile("Music/Win.ogg")) {
         std::cerr << "Error loading music" << std::endl;

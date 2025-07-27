@@ -3,27 +3,37 @@
 Lose::Lose(float width, float height)
     : main_Game_Lose_selected(0)
 {
-    if (!font.loadFromFile("ARCADE_N.TTF.ttf")) {
-        std::cerr << "Error loading font" << std::endl;
+    if (!font.loadFromFile("fonts/ARCADE_N.TTF")) {
+        std::cerr << "Error al cargar la fuente" << std::endl;
     }
 
-    main_Game_Lose[0].setFont(font);
-    main_Game_Lose[0].setFillColor(Color::Green);
-    main_Game_Lose[0].setString("Play Again");
-    main_Game_Lose[0].setPosition(width / 2 - 50, height / (Max_Game_Lose + 1) * 1);
-    main_Game_Lose[0].setCharacterSize(24);
-    
-    main_Game_Lose[1].setFont(font);
-    main_Game_Lose[1].setFillColor(Color::Red);
-    main_Game_Lose[1].setString("Exit");
-    main_Game_Lose[1].setPosition(width / 2 - 50, height / (Max_Game_Lose + 1) * 2);
-    main_Game_Lose[1].setCharacterSize(24);
-
+    // -------- GAME OVER (centrado arriba) --------
     gameOverText.setFont(font);
     gameOverText.setFillColor(Color::Blue);
     gameOverText.setString("GAME OVER");
-    gameOverText.setCharacterSize(48);  
-    gameOverText.setPosition(width / 2 - 100, height / 6);
+    gameOverText.setCharacterSize(60);
+    FloatRect textRect = gameOverText.getLocalBounds();
+    gameOverText.setOrigin(textRect.left + textRect.width / 2.0f, textRect.top + textRect.height / 2.0f);
+    gameOverText.setPosition(width / 2.f, height / 6.f);
+
+     // -------- OPCIÓN: Play Again (centrado) --------
+    main_Game_Lose[0].setFont(font);
+    main_Game_Lose[0].setFillColor(Color::Green);
+    main_Game_Lose[0].setString("Play Again");
+    main_Game_Lose[0].setCharacterSize(40);
+    textRect = main_Game_Lose[0].getLocalBounds();
+    main_Game_Lose[0].setOrigin(textRect.left + textRect.width / 2.0f, textRect.top + textRect.height / 2.0f);
+    main_Game_Lose[0].setPosition(width / 2.f, height / 2.f);
+    
+    // -------- OPCIÓN: Exit (centrado abajo) --------
+    main_Game_Lose[1].setFont(font);
+    main_Game_Lose[1].setFillColor(Color::Red);
+    main_Game_Lose[1].setString("Exit");
+    main_Game_Lose[1].setCharacterSize(40);
+    textRect = main_Game_Lose[1].getLocalBounds();
+    main_Game_Lose[1].setOrigin(textRect.left + textRect.width / 2.0f, textRect.top + textRect.height / 2.0f);
+    main_Game_Lose[1].setPosition(width / 2.f, height / 2.f + 50);
+
 
     if (!LoseMusic.openFromFile("Music/game-over-39-199830.ogg")) {
         std::cerr << "Error loading lose music" << std::endl;

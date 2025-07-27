@@ -10,7 +10,7 @@
  * @param height Alto de la ventana para distribuir verticalmente las opciones.
  */
 Menu::Menu(float width, float height) {
-    if (!font.loadFromFile("ARCADE_N.TTF")) {
+    if (!font.loadFromFile("fonts/ARCADE_N.TTF")) {
         std::cerr << "Error al cargar la fuente.\n";
     }
 
@@ -19,14 +19,18 @@ Menu::Menu(float width, float height) {
     main_menu[0].setFillColor(Color::Green);
     main_menu[0].setString("Play");
     main_menu[0].setCharacterSize(50);
-    main_menu[0].setPosition(Vector2f(width / 2.f - 50.f, height / 3.f));
+    FloatRect textBounds0 = main_menu[0].getLocalBounds();
+    main_menu[0].setOrigin(textBounds0.left + textBounds0.width / 2.0f, textBounds0.top);
+    main_menu[0].setPosition(Vector2f(width / 2.f, height / 2.0f));
 
     // Configuración de la opción "Exit"
     main_menu[1].setFont(font);
     main_menu[1].setFillColor(Color::Red);
     main_menu[1].setString("Exit");
     main_menu[1].setCharacterSize(50);
-    main_menu[1].setPosition(Vector2f(width / 2.f - 50.f, height / 3.f * 2.f));
+    FloatRect textBounds1 = main_menu[1].getLocalBounds();
+    main_menu[1].setOrigin(textBounds1.left + textBounds1.width / 2.0f, textBounds1.top);
+    main_menu[1].setPosition(Vector2f(width / 2.f, height / 3.f * 2.f));
 
     main_menu_selected = 0; ///< Índice de la opción actualmente seleccionada.
 }
