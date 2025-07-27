@@ -5,7 +5,7 @@
 Player::Player(int x, int y, Texture &texture)
 {
     sprite.setTexture(texture);
-    sprite.setTextureRect(IntRect(13 * 8 + 8, 7 * 8 + 7, 16, 8));
+    sprite.setTextureRect(IntRect(0, 118, 32, 32));
     sprite.setPosition(x, y);
     sprite.setScale(3, 3);
     vida = 3;
@@ -24,7 +24,7 @@ Player::Player(int x, int y, Texture &texture)
 
 void Player::Update()
 {
-    if (Keyboard::isKeyPressed(Keyboard::Right) && sprite.getPosition().x + vel < 552) //considerar para los sprites y mando
+    if (Keyboard::isKeyPressed(Keyboard::Right) && sprite.getPosition().x + vel < 1840) //considerar para los sprites y mando
     {
         sprite.move(vel, 0);
     }

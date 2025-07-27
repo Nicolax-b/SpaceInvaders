@@ -7,13 +7,13 @@ Enemie::Enemie(int x, int y, Texture &texture, Vector2f p)
 {
     point = p;
     sprite.setTexture(texture);
-    sprite.setTextureRect(IntRect(point.x, point.y, 8, 8));
-    sprite.setPosition(x, y);
-    sprite.setScale(3, 3);
     state = 0;
     timer = 0;
     vel = 24;
     cadencia = 150;
+    sprite.setTextureRect(IntRect(point.x, point.y, 32, 32));
+    sprite.setPosition(x, y);
+    sprite.setScale(2.5, 2.5);
 
     //  CARGA EL ARCHIVO DE AUDIO AQUÍ
   /*   if (!shootBuffer.loadFromFile("sounds/shootenemy.wav"))
@@ -42,7 +42,7 @@ void Enemie::Update()
         sprite.move(vel, 0);
         state++;
         state %= 2;
-        sprite.setTextureRect(IntRect(point.x + state * 9, point.y, 8, 8));
+        sprite.setTextureRect(IntRect(point.x + state * 33, point.y, 30, 30));
         timer = 0;
 
         //  AQUÍ LLAMAMOS A LA FUNCIÓN QUE REPRODUCE EL SONIDO
@@ -69,4 +69,26 @@ void Enemie::AumentarCadencia()
 void Enemie::draw(RenderTarget &rt, RenderStates rs) const
 {
     rt.draw(sprite, rs);
+}
+void Enemie::ActivarDisparo()
+{
+    if (!shoot)
+    {
+        shoot = true;
+        contadorDisparo = 180;
+        //shootSound.play(); // Reproducir sonido de disparo
+        sprite.setTextureRect(IntRect(96, point.y, 30, 30)); // Cambiar a sprite de disparo
+    }
+}
+void Enemie::UpdateDisparo()
+{
+    if (shoot)
+    {
+        contadorDisparo--;
+        if (contadorDisparo <= 0)
+        {
+            shoot = false;
+            sprite.setTextureRect(IntRect(point.x + state * 33, point.y, 30, 30)); // Volver al sprite normal
+        }
+    }
 }

@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <vector>
+#include <cmath>
 #include <cstdlib> 
 #include <time.h>
 #include "Jugador.hpp"
@@ -15,11 +16,34 @@ using namespace sf;
 
 void UpdatePlayer(Player &player, bool &bulletActive, Bullet &bulletPlayer);
 void UpdateBulletPlayer(Bullet &bulletPlayer, bool &bulletActive, vector<vector<Enemie>> &enemies, IntRect &bulletRect, IntRect &enemieRect);
-void UpdateEnemies(vector<vector<Enemie>> &enemies, int &dirEnemies, int &minX, int &maxX);
+void UpdateEnemies(vector<vector<Enemie>> &enemies);
+void UpdateBulletsEnemies(Player &player);
+void UpdateMuro(vector<Muro> &muro,Bullet &bulletPlayer);
+
 Texture spritesheet;
+Texture spritesheetmuro;
+
 int timer = 0;
-int cadencia = 100;
+int cadencia = 125;
+
+int dirEnemies=1; //1 para derecha, -1 para izquierda
+int maxX,minX;
+int cantEnemies;
+// Variables para la resolución
+int screenWidth;
+int screenHeight;
+
 vector<Bullet> bulletsEnemies;
+vector<pair<int,Vector2f>> posicionMuro;
+Vector2f sectionSpritesheet;
+
+IntRect playerRect;
+IntRect bulletRect;
+IntRect enemieRect;
+IntRect muroRect;
+
+bool bulletActive = false;
+
 // Lista de canciones para reproducir aleatoriamente
 vector<string> canciones = {
     "Music/Play1.ogg",
@@ -44,33 +68,10 @@ void ReproducirCancionAleatoria(vector<string>& canciones, Music& musicaJuego, i
 
     musicaJuego.play();
 }
-void UpdateEnemies(vector<vector<Enemie>> &enemies);
-void UpdateBulletsEnemies(Player &player);
-void UpdateMuro(vector<Muro> &muro,Bullet &bulletPlayer);
-
-Texture spritesheet;
-
-int timer = 0;
-int cadencia = 125;
-
-int dirEnemies=1; //1 para derecha, -1 para izquierda
-int maxX,minX;
-int cantEnemies;
-
-vector<Bullet> bulletsEnemies;
-vector<pair<int,Vector2f>> posicionMuro;
-Vector2f sectionSpritesheet;
-
-IntRect playerRect;
-IntRect bulletRect;
-IntRect enemieRect;
-IntRect muroRect;
-
-bool bulletActive = false;
 
 int main()
 {
-    RenderWindow menuWindow(VideoMode(600, 600), "MENU SPACE INVADERS EPN");
+    RenderWindow menuWindow(VideoMode(1920, 1080), "MENU SPACE INVADERS EPN");
     Menu menu(menuWindow.getSize().x, menuWindow.getSize().y);
     menu.PlayMusic();
 
@@ -109,17 +110,32 @@ int main()
         menu.draw(menuWindow);
         menuWindow.display();
     }
-    if (!spritesheet.loadFromFile("spritesheet.png"))
+    
+    RenderWindow window(VideoMode::getDesktopMode(), "Space Invaders EPN",Style::Fullscreen);
+    window.setFramerateLimit(60);
+    screenWidth = window.getSize().x;
+    screenHeight = window.getSize().y;
+    // Reproducir música de fondo
+    srand(time(NULL));
+    ReproducirCancionAleatoria(canciones, musicaJuego, cancionActual);
+    if (!spritesheet.loadFromFile("spritesheetnuevo.png"))
     {
         cout << "Error al cargar la textura\n";
     };
-    Player player(288, 555, spritesheet);
-    
+    if (!spritesheetmuro.loadFromFile("spritesheet.png"))
+    {
+        cout << "Error al cargar la textura\n";
+    };
+    Player player(screenWidth/2-24,screenHeight-100, spritesheet);
     Bullet bulletPlayer(0, 0, spritesheet, IntRect(0, 0, 0, 0), 0);
-
-
     vector<vector<Enemie>> enemies(7, vector<Enemie>(12, Enemie(0, 0, spritesheet, Vector2f(0, 0))));
     Vector2f sectionSpritesheet;
+    //variables para la resolución
+    float offsetX = screenWidth / 15.f;
+    float offsetY = screenHeight / 20.f;
+    float startX = screenWidth / 8.f;
+    float startY = screenHeight / 10.f;
+
 
     for (int i = 0; i < (int)enemies.size(); i++)
     {
@@ -131,31 +147,30 @@ int main()
             }
             else if (i < 3)
             {
-                sectionSpritesheet = Vector2f(0, 9 + (8 * 4 + 4));
+                sectionSpritesheet = Vector2f(0, 28);
             }
             else if (i < 5)
             {
-                sectionSpritesheet = Vector2f(0, 18 + (8 * 4 + 4) * 2);
+                sectionSpritesheet = Vector2f(0, 56);
             }
             else if (i < 7)
             {
-                sectionSpritesheet = Vector2f(0, 27 + (8 * 4 + 4) * 3);
+                sectionSpritesheet = Vector2f(0, 79);
             }
-            enemies[i][j] = Enemie(j * 30 + 24, i * 30 + 24, spritesheet, sectionSpritesheet);
+            float x = startX + j * offsetX;
+            float y = startY + i * offsetY;
+            enemies[i][j] = Enemie(x, y, spritesheet, sectionSpritesheet);
         }
     }
 
-    vector<Muro> muro(3,Muro(0,0,spritesheet));
+    vector<Muro> muro(4,Muro(0,0,spritesheetmuro));
 	
-	for(int i = 0; i < 3; i++){
-		muro[i]=Muro(70+200*i,460,spritesheet); //considerar sprites
+	for(int i = 0; i < 4; i++){
+		float muroY = screenHeight * 0.7f; // 70% de la pantalla
+        float muroXBase = screenWidth * 0.15f;
+        float muroDist = screenWidth * 0.22f;
+        muro[i] = Muro(muroXBase + i * muroDist, muroY, spritesheetmuro);
 	}
-
-    RenderWindow window(VideoMode(600, 600), "Space Invaders EPN");
-    window.setFramerateLimit(60);
-    // Reproducir música de fondo
-    srand(time(NULL));
-    ReproducirCancionAleatoria(canciones, musicaJuego, cancionActual);
 
     while (window.isOpen())
     {
@@ -165,7 +180,7 @@ int main()
             if (event.type == Event::Closed)
                 window.close();
         }
-
+        //Actualizar
         UpdatePlayer(player, bulletActive, bulletPlayer);
         UpdateBulletPlayer(bulletPlayer, bulletActive, enemies, bulletRect, enemieRect);
         UpdateEnemies(enemies);
@@ -177,7 +192,7 @@ int main()
         }
         for(int i = 0; i < (int)enemies.size(); i++){
 			for(int j = 0; j < (int)enemies[i].size(); j++){
-				if(enemies[i][j].Pos().y>=480){
+				if(enemies[i][j].Pos().y>=screenHeight*0.9f){
 					system("clear");
 					cout<<"Perdiste\n";
 					window.close();
@@ -195,7 +210,7 @@ int main()
 			window.close();
 		}
 
-        window.clear();
+        window.clear(Color::Black);
 
         for (int i = 0; i < (int)bulletsEnemies.size(); i++)
         {
@@ -212,7 +227,7 @@ int main()
                 window.draw(enemies[i][j]);
             }
         }
-        for (int i = 0; i<3; i++)
+        for (int i = 0; i<4; i++)
         {
             window.draw(muro[i]);
         }
@@ -233,7 +248,7 @@ void UpdatePlayer(Player &player, bool &bulletActive, Bullet &bulletPlayer)
 
     if (player.Shoot() && !bulletActive) // Si el jugador dispara y no hay una bala activa
     {
-        Bullet bullet(player.Pos().x + 24, player.Pos().y + 12, spritesheet, IntRect(13 * 8 + 16, 6 * 8 + 6, 8, 8), -10); // Considerar para los sprites
+        Bullet bullet(player.Pos().x + 24, player.Pos().y + 12, spritesheet, IntRect(75,122, 32, 32), -15); // Considerar para los sprites
         bulletPlayer = bullet;
         bulletActive = true; // Activar la bala
     }
@@ -244,18 +259,28 @@ void UpdateBulletPlayer(Bullet &bulletPlayer, bool &bulletActive, vector<vector<
     {
         bulletPlayer.Update();
         if (bulletPlayer.Pos().y < -24) // Si la bala sale de la pantalla
+        {
             bulletActive = false;       // Desactivar la bala
-        bulletRect = IntRect(bulletPlayer.Pos().x, bulletPlayer.Pos().y, 3, 8);
+            return; // Salir de la función
+        }
+        // Colisión precisa: trayecto vertical de la bala
+        float x = bulletPlayer.Pos().x;
+        float y1 = bulletPlayer.getPreviousY();
+        float y2 = bulletPlayer.Pos().y;
+        float top = min(y1, y2);
+        float height = fabs(y1 - y2);
+        bulletRect = IntRect(bulletPlayer.Pos().x, bulletPlayer.Pos().y, 9, 32);
+        // Verificar colisión con enemigos
         for (int i = 0; i < (int)enemies.size(); i++)
         {
             for (int j = 0; j < (int)enemies[i].size(); j++)
             {
-                enemieRect = IntRect(enemies[i][j].Pos().x, enemies[i][j].Pos().y, 24, 24);
+                enemieRect = IntRect(static_cast<int>(enemies[i][j].Pos().x), static_cast<int>(enemies[i][j].Pos().y),32, 32);
                 if (enemieRect.intersects(bulletRect))
                 {                                             // Si la bala colisiona con un enemigo
                     enemies[i].erase(enemies[i].begin() + j); // Eliminar el enemigo
                     bulletActive = false;                     // Desactivar la bala
-                    break;
+                    break;                                    // Salir del bucle de enemigos
                 }
             }
             if (!bulletActive)
@@ -277,16 +302,16 @@ void UpdateBulletPlayer(Bullet &bulletPlayer, bool &bulletActive, vector<vector<
 void UpdateEnemies(vector<vector<Enemie>> &enemies)
 {
     maxX = 0;
-    minX = 600;
+    minX = screenWidth;
     for (int i = 0; i < (int)enemies.size(); i++)
     {
         for (int j = 0; j < (int)enemies[i].size(); j++)
         {
-            maxX = max(maxX, (int)enemies[i][j].Pos().x + 24 * dirEnemies);
-            minX = min(minX, (int)enemies[i][j].Pos().x + 24 * dirEnemies);
+            maxX = max(maxX, (int)enemies[i][j].Pos().x + 50 * dirEnemies);
+            minX = min(minX, (int)enemies[i][j].Pos().x + 50 * dirEnemies);
         }
     }
-    if (minX < 24 || maxX > 576) // Considerar los límites de la pantalla
+    if (minX < 50 || maxX > screenWidth-50) // Considerar los límites de la pantalla
     {
         for (int i = 0; i < (int)enemies.size(); i++)
         {
@@ -302,6 +327,7 @@ void UpdateEnemies(vector<vector<Enemie>> &enemies)
         for (int j = 0; j < (int)enemies[i].size(); j++)
         {
             enemies[i][j].Update();
+            enemies[i][j].UpdateDisparo();
         }
     }
     timer++;
@@ -309,9 +335,18 @@ void UpdateEnemies(vector<vector<Enemie>> &enemies)
     {
         timer = 0;
         srand(time(NULL)); // Inicializar la semilla aleatoria
-        int enem = rand() % (int)enemies.size();
-        Bullet bullet = Bullet(enemies[0][enem].Pos().x + 9, enemies[0][enem].Pos().y - 24, spritesheet, IntRect(13 * 8 + 8, 8 * 2 + 2, 8, 8), 10); // sprites
-        bulletsEnemies.push_back(bullet);                                                                                                           // Agregar la bala a la lista de balas
+        int col = rand() % enemies[0].size();
+        for (int fila = (int)enemies.size() - 1; fila >= 0; fila--)
+        {
+            if (col < (int)enemies[fila].size())
+            {
+                Enemie &enemigo= enemies[fila][col];
+                enemigo.ActivarDisparo(); // Activar disparo del enemigo
+                Bullet bullet = Bullet(enemigo.Pos().x + 9, enemigo.Pos().y - 12, spritesheet, IntRect(43,122, 32,32), 15); // sprites
+                bulletsEnemies.push_back(bullet);  
+                break;
+            }
+        }                                                                                                         
     }
 }
 void UpdateBulletsEnemies(Player &player)
@@ -322,7 +357,7 @@ void UpdateBulletsEnemies(Player &player)
     }
     for (int i = 0; i < (int)bulletsEnemies.size(); i++)
     {
-        if (bulletsEnemies[i].Pos().y > 600) // Si la bala sale de la pantalla
+        if (bulletsEnemies[i].Pos().y > screenHeight) // Si la bala sale de la pantalla
         {
             bulletsEnemies.erase(bulletsEnemies.begin() + i); // Eliminar la bala
         }
@@ -343,10 +378,10 @@ void UpdateMuro(vector<Muro> &muro,Bullet &bulletPlayer)
     if (bulletActive)
     {
         bulletRect= IntRect(bulletPlayer.Pos().x, bulletPlayer.Pos().y, 3, 8);
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < 4; i++)
         {
             muro[i].Pos(posicionMuro);
-            for(int i=0; i < 3; i++){
+            for(int i=0; i < 4; i++){
                 muroRect=IntRect(posicionMuro[i].second.x, posicionMuro[i].second.y, 24, 24);
                 if (muroRect.intersects(bulletRect))
                 {
@@ -360,7 +395,7 @@ void UpdateMuro(vector<Muro> &muro,Bullet &bulletPlayer)
     bool elim = false;
     for (int h=0; h<(int)bulletsEnemies.size();h++){
     bulletRect= IntRect(bulletsEnemies[h].Pos().x, bulletsEnemies[h].Pos().y, 3, 8);
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < 4; i++)
         {
             muro[i].Pos(posicionMuro);
             for(int j=0; j < (int) posicionMuro.size(); j++){
@@ -376,7 +411,7 @@ void UpdateMuro(vector<Muro> &muro,Bullet &bulletPlayer)
             if(elim) break; // Si la bala ya no está activa, salir del bucle
         }
     }
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 4; i++)
     {
         muro[i].Update(); // Actualizar el muro
     }

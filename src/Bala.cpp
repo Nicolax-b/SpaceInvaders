@@ -7,9 +7,11 @@ Bullet::Bullet(int x, int y, Texture &texture, IntRect intRect, int v)
     sprite.setPosition(sf::Vector2f(static_cast<float>(x), static_cast<float>(y)));
     sprite.setScale(sf::Vector2f(3.0f, 3.0f));
     vel = v;
+    ubi = static_cast<float>(y); // Guardar la posición inicial en Y
 }
 
 void Bullet::Update() {
+    ubi = sprite.getPosition().y; // Actualizar la posición previa en Y
     sprite.move(sf::Vector2f(0, vel));
 }
 
