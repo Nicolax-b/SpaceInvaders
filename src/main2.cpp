@@ -32,7 +32,7 @@ int timer = 0;
 int cadencia = 125;
 int score = 0;
 int vida = 3;
-int cantMuro = 4; 
+int cantMuro = 4;
 
 int dirEnemies = 1; // 1 para derecha, -1 para izquierda
 int maxX, minX;
@@ -40,23 +40,23 @@ int cantEnemies;
 // Variables para la resolución
 int screenWidth;
 int screenHeight;
-
+// Vectores
 vector<Bullet> bulletsEnemies;
 vector<pair<int, Vector2f>> posicionMuro;
 Vector2f sectionSpritesheet;
-
+// Rectangulos sprites
 IntRect playerRect;
 IntRect bulletRect;
 IntRect enemieRect;
 IntRect muroRect;
-
+// Variable bala
 bool bulletActive = false;
 
 // Lista de canciones para reproducir aleatoriamente
 vector<string> canciones = {
     "Music/Play1.ogg",
     "Music/Play2.ogg"};
-
+// Musica
 Music musicaJuego;
 int cancionActual = -1;
 void ReproducirCancionAleatoria(vector<string> &canciones, Music &musicaJuego, int &cancionActual)
@@ -144,7 +144,7 @@ int main()
     Bullet bulletPlayer(0, 0, spritesheet, IntRect(0, 0, 0, 0), 0);
     vector<vector<Enemie>> enemies(7, vector<Enemie>(9, Enemie(0, 0, spritesheet, Vector2f(0, 0))));
     Vector2f sectionSpritesheet;
-    // variables para la resolución
+    // Variables resolución pantalla
     float offsetX = screenWidth / 15.f;
     float offsetY = screenHeight / 20.f;
     float startX = screenWidth / 8.f;
@@ -153,7 +153,7 @@ int main()
     for (int i = 0; i < (int)enemies.size(); i++)
     {
         for (int j = 0; j < (int)enemies[i].size(); j++)
-        { // Considerar para los sprites
+        { // Sprites enemigos
             if (i == 0)
             {
                 sectionSpritesheet = Vector2f(0, 0);
@@ -175,6 +175,7 @@ int main()
             enemies[i][j] = Enemie(x, y, spritesheet, sectionSpritesheet);
         }
     }
+    // Iniciar Muro
     vector<Muro> muro(cantMuro, Muro(0, 0, spritesheetmuro));
 
     for (int i = 0; i < cantMuro; i++)
@@ -201,7 +202,7 @@ int main()
             if (event.type == Event::Closed)
                 window.close();
         }
-        // Actualizar
+        // Actualizar procesos
         UpdatePlayer(player, bulletActive, bulletPlayer);
         UpdateBulletPlayer(bulletPlayer, bulletActive, enemies, bulletRect, enemieRect, hud);
         UpdateEnemies(enemies);
@@ -250,25 +251,25 @@ int main()
 
         for (int i = 0; i < (int)bulletsEnemies.size(); i++)
         {
-            window.draw(bulletsEnemies[i]);
+            window.draw(bulletsEnemies[i]); // Dibujar balas de enemigos
         }
         if (bulletActive)
         {
-            window.draw(bulletPlayer);
+            window.draw(bulletPlayer); // Dibujar bala del jugador
         }
         for (int i = 0; i < (int)enemies.size(); i++)
         {
             for (int j = 0; j < (int)enemies[i].size(); j++)
             {
-                window.draw(enemies[i][j]);
+                window.draw(enemies[i][j]); // Dibujar enemigos
             }
         }
         for (int i = 0; i < cantMuro; i++)
         {
-            window.draw(muro[i]);
+            window.draw(muro[i]); // Dibujar muro
         }
-        window.draw(player);
-        window.draw(hud);
+        window.draw(player); // Dibujar jugador
+        window.draw(hud);    // Dibujar Score y Vidas
         window.display();
         // Reproducir música de fondo
         if (musicaJuego.getStatus() == SoundSource::Status::Stopped)
@@ -284,7 +285,7 @@ void mostrarPantallaWin()
     RenderWindow winWindow(VideoMode::getDesktopMode(), "¡Ganaste!", Style::Fullscreen);
     Win win(winWindow.getSize().x, winWindow.getSize().y);
     win.PlayMusic();
-
+    // Control de la pantalla
     while (winWindow.isOpen())
     {
         Event event;
@@ -331,7 +332,7 @@ void mostrarPantallaLose()
     RenderWindow loseWindow(VideoMode::getDesktopMode(), "Perdiste", Style::Fullscreen);
     Lose lose(loseWindow.getSize().x, loseWindow.getSize().y);
     lose.PlayMusic();
-
+    // Control de la pantalla
     while (loseWindow.isOpen())
     {
         Event event;
@@ -359,7 +360,7 @@ void mostrarPantallaLose()
                     loseWindow.close();
                     score = 0; // Reiniciar el puntaje
                     vida = 3;  // Reiniciar la vida
-                    main(); // Reinicia
+                    main();    // Reinicia
                 }
                 else if (selected == 1)
                 {
@@ -377,188 +378,188 @@ void mostrarPantallaLose()
         }
     }
 }
-void UpdatePlayer(Player & player, bool &bulletActive, Bullet &bulletPlayer)
-    {
-        player.Update();
+void UpdatePlayer(Player &player, bool &bulletActive, Bullet &bulletPlayer)
+{
+    player.Update();
 
-        if (player.Shoot() && !bulletActive) // Si el jugador dispara y no hay una bala activa
-        {
-            Bullet bullet(player.Pos().x + 24, player.Pos().y + 12, spritesheet, IntRect(75, 122, 32, 32), -15); // Considerar para los sprites
-            bulletPlayer = bullet;
-            bulletActive = true; // Activar la bala
-        }
-    }
-    void UpdateBulletPlayer(Bullet & bulletPlayer, bool &bulletActive, vector<vector<Enemie>> &enemies, IntRect &bulletRect, IntRect &enemieRect, HUD &hud)
+    if (player.Shoot() && !bulletActive) // Si el jugador dispara y no hay una bala activa
     {
-        if (bulletActive)
-        {
-            bulletPlayer.Update();
-            if (bulletPlayer.Pos().y < -24) // Si la bala sale de la pantalla
-            {
-                bulletActive = false; // Desactivar la bala
-                return;               // Salir de la función
-            }
-            // Colisión precisa: trayecto vertical de la bala
-            float x = bulletPlayer.Pos().x;
-            float y1 = bulletPlayer.getPreviousY();
-            float y2 = bulletPlayer.Pos().y;
-            float top = min(y1, y2);
-            float height = fabs(y1 - y2);
-            bulletRect = IntRect(bulletPlayer.Pos().x, bulletPlayer.Pos().y, 9, 32);
-            // Verificar colisión con enemigos
-            for (int i = 0; i < (int)enemies.size(); i++)
-            {
-                for (int j = 0; j < (int)enemies[i].size(); j++)
-                {
-                    enemieRect = IntRect(static_cast<int>(enemies[i][j].Pos().x), static_cast<int>(enemies[i][j].Pos().y), 32, 32);
-                    if (enemieRect.intersects(bulletRect))
-                    {                                             // Si la bala colisiona con un enemigo
-                        enemies[i].erase(enemies[i].begin() + j); // Eliminar el enemigo
-                        bulletActive = false;                     // Desactivar la bala                                    // Salir del bucle de enemigos
-                        int puntos = (7 - i) * 100;               // enemigos de más arriba valen más
-                        score += puntos;
-                        ;                       // Aumentar el puntaje
-                        hud.updateScore(score); // Actualizar el puntaje en el HUD
-                        break;
-                    }
-                }
-                if (!bulletActive)
-                    break; // Si la bala ya no está activa, salir del bucle
-            }
-            if (!bulletActive)
-            {
-                for (int i = 0; i < (int)enemies.size(); i++)
-                {
-                    for (int j = 0; j < (int)enemies[i].size(); j++)
-                    {
-                        enemies[i][j].AumentarCadencia(); // Aumentar la cadencia de disparo de los enemigos
-                    }
-                }
-                cadencia--;
-            }
-        }
+        Bullet bullet(player.Pos().x + 24, player.Pos().y + 12, spritesheet, IntRect(75, 122, 32, 32), -15); // Considerar para los sprites
+        bulletPlayer = bullet;
+        bulletActive = true; // Activar la bala
     }
-    void UpdateEnemies(vector<vector<Enemie>> & enemies)
+}
+void UpdateBulletPlayer(Bullet &bulletPlayer, bool &bulletActive, vector<vector<Enemie>> &enemies, IntRect &bulletRect, IntRect &enemieRect, HUD &hud)
+{
+    if (bulletActive)
     {
-        maxX = 0;
-        minX = screenWidth;
+        bulletPlayer.Update();
+        if (bulletPlayer.Pos().y < -24) // Si la bala sale de la pantalla
+        {
+            bulletActive = false; // Desactivar la bala
+            return;               // Salir de la función
+        }
+        // Colisión precisa: trayecto vertical de la bala
+        float x = bulletPlayer.Pos().x;
+        float y1 = bulletPlayer.getPreviousY();
+        float y2 = bulletPlayer.Pos().y;
+        float top = min(y1, y2);
+        float height = fabs(y1 - y2);
+        bulletRect = IntRect(bulletPlayer.Pos().x, bulletPlayer.Pos().y, 9, 32);
+        // Verificar colisión con enemigos
         for (int i = 0; i < (int)enemies.size(); i++)
         {
             for (int j = 0; j < (int)enemies[i].size(); j++)
             {
-                maxX = max(maxX, (int)enemies[i][j].Pos().x + 50 * dirEnemies);
-                minX = min(minX, (int)enemies[i][j].Pos().x + 50 * dirEnemies);
-            }
-        }
-        if (minX < 50 || maxX > screenWidth - 50) // Considerar los límites de la pantalla
-        {
-            for (int i = 0; i < (int)enemies.size(); i++)
-            {
-                for (int j = 0; j < (int)enemies[i].size(); j++)
-                {
-                    enemies[i][j].ChangeDir(); // Cambiar dirección si se alcanza el borde
-                }
-            }
-            dirEnemies *= -1; // Cambiar la dirección de movimiento
-        }
-        for (int i = 0; i < (int)enemies.size(); i++)
-        {
-            for (int j = 0; j < (int)enemies[i].size(); j++)
-            {
-                enemies[i][j].Update();
-                enemies[i][j].UpdateDisparo();
-            }
-        }
-        timer++;
-        if (timer >= cadencia && (int)enemies.size() > 0) // Si ha pasado el tiempo de cadencia y hay enemigos
-        {
-            timer = 0;
-            srand(time(NULL)); // Inicializar la semilla aleatoria
-            int col = rand() % enemies[0].size();
-            for (int fila = (int)enemies.size() - 1; fila >= 0; fila--)
-            {
-                if (col < (int)enemies[fila].size())
-                {
-                    Enemie &enemigo = enemies[fila][col];
-                    enemigo.ActivarDisparo();                                                                                     // Activar disparo del enemigo
-                    Bullet bullet = Bullet(enemigo.Pos().x + 9, enemigo.Pos().y - 12, spritesheet, IntRect(43, 122, 32, 32), 15); // sprites
-                    bulletsEnemies.push_back(bullet);
+                enemieRect = IntRect(static_cast<int>(enemies[i][j].Pos().x), static_cast<int>(enemies[i][j].Pos().y), 32, 32);
+                if (enemieRect.intersects(bulletRect))
+                {                                             // Si la bala colisiona con un enemigo
+                    enemies[i].erase(enemies[i].begin() + j); // Eliminar el enemigo
+                    bulletActive = false;                     // Desactivar la bala                                    // Salir del bucle de enemigos
+                    int puntos = (7 - i) * 100;               // enemigos de más arriba valen más
+                    score += puntos;
+                    ;                       // Aumentar el puntaje
+                    hud.updateScore(score); // Actualizar el puntaje en el HUD
                     break;
                 }
             }
+            if (!bulletActive)
+                break; // Si la bala ya no está activa, salir del bucle
+        }
+        if (!bulletActive)
+        {
+            for (int i = 0; i < (int)enemies.size(); i++)
+            {
+                for (int j = 0; j < (int)enemies[i].size(); j++)
+                {
+                    enemies[i][j].AumentarCadencia(); // Aumentar la cadencia de disparo de los enemigos
+                }
+            }
+            cadencia--;
         }
     }
-void UpdateBulletsEnemies(Player & player, HUD & hud)
+}
+void UpdateEnemies(vector<vector<Enemie>> &enemies)
+{
+    maxX = 0;
+    minX = screenWidth;
+    for (int i = 0; i < (int)enemies.size(); i++)
     {
-        for (int i = 0; i < (int)bulletsEnemies.size(); i++)
+        for (int j = 0; j < (int)enemies[i].size(); j++)
         {
-            bulletsEnemies[i].Update();
+            maxX = max(maxX, (int)enemies[i][j].Pos().x + 50 * dirEnemies);
+            minX = min(minX, (int)enemies[i][j].Pos().x + 50 * dirEnemies);
         }
-        for (int i = 0; i < (int)bulletsEnemies.size(); i++)
+    }
+    if (minX < 50 || maxX > screenWidth - 50) // Considerar los límites de la pantalla
+    {
+        for (int i = 0; i < (int)enemies.size(); i++)
         {
-            if (bulletsEnemies[i].Pos().y > screenHeight) // Si la bala sale de la pantalla
+            for (int j = 0; j < (int)enemies[i].size(); j++)
             {
-                bulletsEnemies.erase(bulletsEnemies.begin() + i); // Eliminar la bala
+                enemies[i][j].ChangeDir(); // Cambiar dirección si se alcanza el borde
             }
         }
-        playerRect = IntRect(player.Pos().x, player.Pos().y + 9, 48, 15); // En cuenta sprites
-        for (int i = 0; i < (int)bulletsEnemies.size(); i++)
+        dirEnemies *= -1; // Cambiar la dirección de movimiento
+    }
+    for (int i = 0; i < (int)enemies.size(); i++)
+    {
+        for (int j = 0; j < (int)enemies[i].size(); j++)
         {
-            bulletRect = IntRect(bulletsEnemies[i].Pos().x, bulletsEnemies[i].Pos().y, 3, 24);
-            if (playerRect.intersects(bulletRect))
+            enemies[i][j].Update();
+            enemies[i][j].UpdateDisparo();
+        }
+    }
+    timer++;
+    if (timer >= cadencia && (int)enemies.size() > 0) // Si ha pasado el tiempo de cadencia y hay enemigos
+    {
+        timer = 0;
+        srand(time(NULL)); // Inicializar la semilla aleatoria
+        int col = rand() % enemies[0].size();
+        for (int fila = (int)enemies.size() - 1; fila >= 0; fila--)
+        {
+            if (col < (int)enemies[fila].size())
             {
-                bulletsEnemies.erase(bulletsEnemies.begin() + i);
-                player.QuitarVida();
-                vida--;                // Disminuir vida del jugador
-                hud.updateVidas(vida); // Actualizar vidas en el HUD
+                Enemie &enemigo = enemies[fila][col];
+                enemigo.ActivarDisparo();                                                                                     // Activar disparo del enemigo
+                Bullet bullet = Bullet(enemigo.Pos().x + 9, enemigo.Pos().y - 12, spritesheet, IntRect(43, 122, 32, 32), 15); // sprites
+                bulletsEnemies.push_back(bullet);
+                break;
             }
         }
     }
-    void UpdateMuro(vector<Muro> & muro, Bullet & bulletPlayer)
+}
+void UpdateBulletsEnemies(Player &player, HUD &hud)
+{
+    for (int i = 0; i < (int)bulletsEnemies.size(); i++)
     {
-        if (bulletActive)
+        bulletsEnemies[i].Update();
+    }
+    for (int i = 0; i < (int)bulletsEnemies.size(); i++)
+    {
+        if (bulletsEnemies[i].Pos().y > screenHeight) // Si la bala sale de la pantalla
         {
-            bulletRect = IntRect(bulletPlayer.Pos().x, bulletPlayer.Pos().y, 3, 8);
-            for (int i = 0; i < cantMuro; i++)
-            {
-                muro[i].Pos(posicionMuro);
-                for (int i = 0; i < cantMuro; i++)
-                {
-                    muroRect = IntRect(posicionMuro[i].second.x, posicionMuro[i].second.y, 24, 24);
-                    if (muroRect.intersects(bulletRect))
-                    {
-                        muro[i].Colision(posicionMuro[i].first, false); // Considerar sprites
-                        bulletActive = false;                           // Desactivar la bala
-                    }
-                }
-                if (!bulletActive)
-                    break; // Si la bala ya no está activa, salir del bucle
-            }
+            bulletsEnemies.erase(bulletsEnemies.begin() + i); // Eliminar la bala
         }
-        bool elim = false;
-        for (int h = 0; h < (int)bulletsEnemies.size(); h++)
+    }
+    playerRect = IntRect(player.Pos().x, player.Pos().y + 9, 48, 15); // En cuenta sprites
+    for (int i = 0; i < (int)bulletsEnemies.size(); i++)
+    {
+        bulletRect = IntRect(bulletsEnemies[i].Pos().x, bulletsEnemies[i].Pos().y, 3, 24);
+        if (playerRect.intersects(bulletRect))
         {
-            bulletRect = IntRect(bulletsEnemies[h].Pos().x, bulletsEnemies[h].Pos().y, 3, 8);
-            for (int i = 0; i < cantMuro; i++)
-            {
-                muro[i].Pos(posicionMuro);
-                for (int j = 0; j < (int)posicionMuro.size(); j++)
-                {
-                    muroRect = IntRect(posicionMuro[j].second.x, posicionMuro[j].second.y, 24, 24);
-                    if (muroRect.intersects(bulletRect))
-                    {
-                        muro[i].Colision(posicionMuro[j].first, true);    // Considerar sprites
-                        bulletsEnemies.erase(bulletsEnemies.begin() + h); // Eliminar la bala enemiga
-                        elim = true;
-                        break;
-                    }
-                }
-                if (elim)
-                    break; // Si la bala ya no está activa, salir del bucle
-            }
+            bulletsEnemies.erase(bulletsEnemies.begin() + i);
+            player.QuitarVida();
+            vida--;                // Disminuir vida del jugador
+            hud.updateVidas(vida); // Actualizar vidas en el HUD
         }
+    }
+}
+void UpdateMuro(vector<Muro> &muro, Bullet &bulletPlayer)
+{
+    if (bulletActive)
+    {
+        bulletRect = IntRect(bulletPlayer.Pos().x, bulletPlayer.Pos().y, 3, 8);
         for (int i = 0; i < cantMuro; i++)
         {
-            muro[i].Update(); // Actualizar el muro
+            muro[i].Pos(posicionMuro);
+            for (int i = 0; i < cantMuro; i++)
+            {
+                muroRect = IntRect(posicionMuro[i].second.x, posicionMuro[i].second.y, 24, 24);
+                if (muroRect.intersects(bulletRect))
+                {
+                    muro[i].Colision(posicionMuro[i].first, false); // Considerar sprites
+                    bulletActive = false;                           // Desactivar la bala
+                }
+            }
+            if (!bulletActive)
+                break; // Si la bala ya no está activa, salir del bucle
         }
     }
+    bool elim = false;
+    for (int h = 0; h < (int)bulletsEnemies.size(); h++)
+    {
+        bulletRect = IntRect(bulletsEnemies[h].Pos().x, bulletsEnemies[h].Pos().y, 3, 8);
+        for (int i = 0; i < cantMuro; i++)
+        {
+            muro[i].Pos(posicionMuro);
+            for (int j = 0; j < (int)posicionMuro.size(); j++)
+            {
+                muroRect = IntRect(posicionMuro[j].second.x, posicionMuro[j].second.y, 24, 24);
+                if (muroRect.intersects(bulletRect))
+                {
+                    muro[i].Colision(posicionMuro[j].first, true);    // Considerar sprites
+                    bulletsEnemies.erase(bulletsEnemies.begin() + h); // Eliminar la bala enemiga
+                    elim = true;
+                    break;
+                }
+            }
+            if (elim)
+                break; // Si la bala ya no está activa, salir del bucle
+        }
+    }
+    for (int i = 0; i < cantMuro; i++)
+    {
+        muro[i].Update(); // Actualizar el muro
+    }
+}

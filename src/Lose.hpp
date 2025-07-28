@@ -12,7 +12,7 @@ class Lose
 public:
 Lose (float width, float height);
 ~Lose();
-void draw(sf::RenderWindow &window);
+void draw(RenderWindow &window);
 void MoveUp();
 void MoveDown();
 int GameLosePressed() 
@@ -23,8 +23,8 @@ int GameLosePressed()
      void StopMusic();
      private:
     int main_Game_Lose_selected;          
-    sf::Font font;                   
-    sf::Text main_Game_Lose[Max_Game_Lose]; 
-    sf::Text gameOverText;
-    sf::Music LoseMusic;             
+    Font font;                   
+    Text main_Game_Lose[Max_Game_Lose]; 
+    Text gameOverText;
+    Music LoseMusic;             
 };
