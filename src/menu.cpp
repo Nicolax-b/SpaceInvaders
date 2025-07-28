@@ -18,7 +18,7 @@ Menu::Menu(float width, float height) {
     main_menu[0].setFont(font);
     main_menu[0].setFillColor(Color::Green);
     main_menu[0].setString("Play");
-    main_menu[0].setCharacterSize(50);
+    main_menu[0].setCharacterSize(200);
     FloatRect textBounds0 = main_menu[0].getLocalBounds();
     main_menu[0].setOrigin(textBounds0.left + textBounds0.width / 2.0f, textBounds0.top);
     main_menu[0].setPosition(Vector2f(width / 2.f, height / 2.0f));

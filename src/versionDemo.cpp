@@ -38,7 +38,7 @@ bool bulletActive = false;
 
 int main()
 {
-    if (!spritesheet.loadFromFile("spritesheet.png"))
+    if (!spritesheet.loadFromFile("textures/spritesheet.png"))
     {
         cout << "Error al cargar la textura\n";
     };

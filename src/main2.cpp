@@ -32,6 +32,7 @@ int timer = 0;
 int cadencia = 125;
 int score = 0;
 int vida = 3;
+int cantMuro = 4; 
 
 int dirEnemies = 1; // 1 para derecha, -1 para izquierda
 int maxX, minX;
@@ -141,7 +142,7 @@ int main()
     };
     Player player(screenWidth / 2 - 24, screenHeight - 100, spritesheet);
     Bullet bulletPlayer(0, 0, spritesheet, IntRect(0, 0, 0, 0), 0);
-    vector<vector<Enemie>> enemies(7, vector<Enemie>(12, Enemie(0, 0, spritesheet, Vector2f(0, 0))));
+    vector<vector<Enemie>> enemies(7, vector<Enemie>(9, Enemie(0, 0, spritesheet, Vector2f(0, 0))));
     Vector2f sectionSpritesheet;
     // variables para la resolución
     float offsetX = screenWidth / 15.f;
@@ -174,10 +175,9 @@ int main()
             enemies[i][j] = Enemie(x, y, spritesheet, sectionSpritesheet);
         }
     }
+    vector<Muro> muro(cantMuro, Muro(0, 0, spritesheetmuro));
 
-    vector<Muro> muro(4, Muro(0, 0, spritesheetmuro));
-
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < cantMuro; i++)
     {
         float muroY = screenHeight * 0.7f; // 70% de la pantalla
         float muroXBase = screenWidth * 0.15f;
@@ -263,7 +263,7 @@ int main()
                 window.draw(enemies[i][j]);
             }
         }
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < cantMuro; i++)
         {
             window.draw(muro[i]);
         }
@@ -488,7 +488,7 @@ void UpdatePlayer(Player & player, bool &bulletActive, Bullet &bulletPlayer)
             }
         }
     }
-    void UpdateBulletsEnemies(Player & player, HUD & hud)
+void UpdateBulletsEnemies(Player & player, HUD & hud)
     {
         for (int i = 0; i < (int)bulletsEnemies.size(); i++)
         {
@@ -519,10 +519,10 @@ void UpdatePlayer(Player & player, bool &bulletActive, Bullet &bulletPlayer)
         if (bulletActive)
         {
             bulletRect = IntRect(bulletPlayer.Pos().x, bulletPlayer.Pos().y, 3, 8);
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < cantMuro; i++)
             {
                 muro[i].Pos(posicionMuro);
-                for (int i = 0; i < 4; i++)
+                for (int i = 0; i < cantMuro; i++)
                 {
                     muroRect = IntRect(posicionMuro[i].second.x, posicionMuro[i].second.y, 24, 24);
                     if (muroRect.intersects(bulletRect))
@@ -539,7 +539,7 @@ void UpdatePlayer(Player & player, bool &bulletActive, Bullet &bulletPlayer)
         for (int h = 0; h < (int)bulletsEnemies.size(); h++)
         {
             bulletRect = IntRect(bulletsEnemies[h].Pos().x, bulletsEnemies[h].Pos().y, 3, 8);
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < cantMuro; i++)
             {
                 muro[i].Pos(posicionMuro);
                 for (int j = 0; j < (int)posicionMuro.size(); j++)
@@ -557,7 +557,7 @@ void UpdatePlayer(Player & player, bool &bulletActive, Bullet &bulletPlayer)
                     break; // Si la bala ya no está activa, salir del bucle
             }
         }
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < cantMuro; i++)
         {
             muro[i].Update(); // Actualizar el muro
         }

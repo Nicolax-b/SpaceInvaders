@@ -10,7 +10,7 @@ Win::Win(float width, float height)
      // -------- Texto principal centrado --------
     gameWinText.setFont(font);
     gameWinText.setFillColor(Color::Yellow);
-    gameWinText.setString("WELL DONE HERO¡¡¡");
+    gameWinText.setString("WELL DONE HERO!");
     gameWinText.setCharacterSize(60);
     gameWinText.setOutlineColor(Color::White);
     gameWinText.setOutlineThickness(2);
