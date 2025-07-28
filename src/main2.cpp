@@ -131,11 +131,11 @@ int main()
     // Reproducir música de fondo
     srand(time(NULL));
     ReproducirCancionAleatoria(canciones, musicaJuego, cancionActual);
-    if (!spritesheet.loadFromFile("spritesheetnuevo.png"))
+    if (!spritesheet.loadFromFile("textures/spritesheetnuevo.png"))
     {
         cout << "Error al cargar la textura\n";
     };
-    if (!spritesheetmuro.loadFromFile("spritesheet.png"))
+    if (!spritesheetmuro.loadFromFile("textures/spritesheet.png"))
     {
         cout << "Error al cargar la textura\n";
     };
