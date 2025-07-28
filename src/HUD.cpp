@@ -5,7 +5,7 @@ HUD::HUD(Font &font)
     // Inicializar texto de vidas
     vidasText.setFont(font);
     vidasText.setCharacterSize(24);
-    vidasText.setFillColor(sf::Color::White);
+    vidasText.setFillColor(sf::Color::Red);
     vidasText.setPosition(20.f, 10.f);
     vidas = 3; // valor por defecto
     updateVidas(vidas);
@@ -13,7 +13,7 @@ HUD::HUD(Font &font)
     // Inicializar texto de puntaje
     scoreText.setFont(font);
     scoreText.setCharacterSize(24);
-    scoreText.setFillColor(sf::Color::White);
+    scoreText.setFillColor(sf::Color::Yellow);
     scoreText.setPosition(20.f, 40.f);
     score = 0;
     updateScore(score);

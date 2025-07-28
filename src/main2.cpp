@@ -126,7 +126,7 @@ int main()
     }
 
     RenderWindow window(VideoMode::getDesktopMode(), "Space Invaders EPN", Style::Fullscreen);
-    window.setFramerateLimit(60);
+    window.setFramerateLimit(120);
     screenWidth = window.getSize().x;
     screenHeight = window.getSize().y;
     // Reproducir música de fondo
@@ -142,7 +142,7 @@ int main()
     };
     Player player(screenWidth / 2 - 24, screenHeight - 100, spritesheet);
     Bullet bulletPlayer(0, 0, spritesheet, IntRect(0, 0, 0, 0), 0);
-    vector<vector<Enemie>> enemies(7, vector<Enemie>(9, Enemie(0, 0, spritesheet, Vector2f(0, 0))));
+    vector<vector<Enemie>> enemies(7, vector<Enemie>(12, Enemie(0, 0, spritesheet, Vector2f(0, 0))));
     Vector2f sectionSpritesheet;
     // Variables resolución pantalla
     float offsetX = screenWidth / 15.f;
@@ -416,7 +416,7 @@ void UpdateBulletPlayer(Bullet &bulletPlayer, bool &bulletActive, vector<vector<
                 {                                             // Si la bala colisiona con un enemigo
                     enemies[i].erase(enemies[i].begin() + j); // Eliminar el enemigo
                     bulletActive = false;                     // Desactivar la bala                                    // Salir del bucle de enemigos
-                    int puntos = (7 - i) * 100;               // enemigos de más arriba valen más
+                    int puntos = (7 - i);               // enemigos de más arriba valen más
                     score += puntos;
                     ;                       // Aumentar el puntaje
                     hud.updateScore(score); // Actualizar el puntaje en el HUD
